@@ -2,7 +2,6 @@ package models
 
 import (
 	"cartoon-gin/common"
-	"github.com/go-sql-driver/mysql"
 	"time"
 )
 
@@ -12,7 +11,6 @@ type User struct {
 	NickName string `json:"nick_name"`
 	CreatedAt common.MyTime `json:"created_at"`
 	UpdatedAt common.MyTime `json:"updated_at"`
-	DeletedAt mysql.NullTime `json:"deleted_at"`
 }
 
 func AddUser(phone,nickname string) (id int64,err error) {
@@ -30,12 +28,12 @@ func GetUsersByPhone(phone string) (users []User,err error) {
 
 	for rows.Next() {
 		var user User
-		err := rows.Scan(&user.Id, &user.Phone, &user.NickName,&user.CreatedAt,&user.UpdatedAt,&user.DeletedAt)
+		err := rows.Scan(&user.Id, &user.Phone, &user.NickName,&user.CreatedAt,&user.UpdatedAt)
 		common.CheckError(err)
-		if user.DeletedAt.Valid {
-			user.DeletedAt.Time.Format("2006-01-02 15:04:05")
-			//= time.Time.Format(user.DeletedAt.Time,"2006-01-02 15:04:05")
-		}
+		//if user.DeletedAt.Valid {
+		//	user.DeletedAt.Time.Format("2006-01-02 15:04:05")
+		//	//= time.Time.Format(user.DeletedAt.Time,"2006-01-02 15:04:05")
+		//}
 		users = append(users, user)
 	}
 	return users,err

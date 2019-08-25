@@ -11,6 +11,7 @@ func initRouter() *gin.Engine {
 	router.GET("/")
 	router.POST("/user/create", AddUserAction)
 	router.GET("/user/get",QueryUserAction)
-	router.GET("/test",TestDB)
+
+	router.GET("/category/all",GetAllAction)
 	return router
 }

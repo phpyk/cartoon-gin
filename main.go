@@ -1,8 +1,10 @@
 package main
 
 import (
+	"cartoon-gin/models"
+	"fmt"
 	"github.com/gin-gonic/gin"
-	"log"
+	"github.com/jinzhu/gorm"
 	"net/http"
 )
 
@@ -63,9 +65,33 @@ func setupRouter() *gin.Engine {
 }
 
 func main() {
-	r := initRouter()
-	err := r.Run(":8080")
-	if err != nil {
-		log.Fatal("failed to start gin",err)
-	}
+	var cats []models.Category
+	cats = models.GetAllCategories()
+	fmt.Println(cats)
+	res := models.AddCategory("testtest",1)
+	fmt.Println(res)
+
+
+	db, _ := gorm.Open("mysql","root:hajgv8t24oA9@(123.206.107.76:3306)/news?charset=utf8&parseTime=True")
+	db.Find(&cats)
+	fmt.Println(cats)
+
+
+	db2, _ := gorm.Open("mysql","root:hajgv8t24oA9@(123.206.107.76:3306)/cartoon?charset=utf8&parseTime=True")
+	var keys []models.Keywords
+	db2.Find(&keys)
+	fmt.Println(keys)
+
+	db3, _ := gorm.Open("mysql","root:12345678@/cartoon?charset=utf8&parseTime=True")
+	var users []models.User
+	db3.Find(&users)
+	fmt.Println(users)
+	var user models.User
+	db3.Debug().Where("id = ?",1).First(&user)
+	fmt.Println(user.Phone)
+	//r := initRouter()
+	//err := r.Run(":8080")
+	//if err != nil {
+	//	log.Fatal("failed to start gin",err)
+	//}
 }
