@@ -65,16 +65,20 @@ func setupRouter() *gin.Engine {
 }
 
 func main() {
-	var cats []models.Category
-	cats = models.GetAllCategories()
-	fmt.Println(cats)
-	res := models.AddCategory("testtest",1)
-	fmt.Println(res)
+	//var cats []models.Category
+	//cats = models.GetAllCategories()
+	//fmt.Println(cats)
+	//res := models.AddCategory("testtest",1)
+	//fmt.Println(res)
 
 
 	db, _ := gorm.Open("mysql","root:hajgv8t24oA9@(123.206.107.76:3306)/news?charset=utf8&parseTime=True")
-	db.Find(&cats)
-	fmt.Println(cats)
+	//db.AutoMigrate(&models.Category{})
+	cat := models.Category{CateName:"ttttt",ParentId:0}
+	res := db.NewRecord(cat)
+	db.Create(&cat)
+	//db.Find(&cats)
+	fmt.Println(res)
 
 
 	db2, _ := gorm.Open("mysql","root:hajgv8t24oA9@(123.206.107.76:3306)/cartoon?charset=utf8&parseTime=True")
@@ -89,6 +93,10 @@ func main() {
 	var user models.User
 	db3.Debug().Where("id = ?",1).First(&user)
 	fmt.Println(user.Phone)
+
+
+
+
 	//r := initRouter()
 	//err := r.Run(":8080")
 	//if err != nil {
