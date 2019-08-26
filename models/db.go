@@ -14,5 +14,9 @@ func OpenDB() (*sql.DB,error) {
 
 func OpenNewsDB() (*gorm.DB, error) {
 	db, err := gorm.Open("mysql","root:hajgv8t24oA9@(123.206.107.76:3306)/news?charset=utf8mb4&parseTime=True")
+	if err != nil {
+		panic(err)
+		defer db.Close()
+	}
 	return db,err
 }

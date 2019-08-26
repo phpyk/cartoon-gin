@@ -13,7 +13,7 @@ func AddUserAction(c *gin.Context) {
 	user,err := models.AddUser(phone,nickName)
 
 	if err != nil {
-		cg.Failed("新建用户失败",err,user)
+		cg.Failed("新建用户失败")
 	}else {
 		cg.Success(user)
 	}
@@ -25,7 +25,7 @@ func QueryUserAction(c *gin.Context) {
 	users,err := models.GetUsersByPhone(phone)
 
 	if err != nil{
-		cg.Failed("获取用户失败",err,users)
+		cg.Failed("获取用户失败")
 	}
 	cg.Success(users)
 }

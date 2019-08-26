@@ -13,5 +13,6 @@ func initRouter() *gin.Engine {
 	router.GET("/user/get",QueryUserAction)
 
 	router.GET("/category/all",GetAllAction)
+	router.POST("/category/add",AddCatAction)
 	return router
 }

@@ -21,10 +21,9 @@ func (g *Gin) Success(data interface{}) {
 	})
 }
 
-func (g *Gin) Failed(errmsg string,err error,data interface{})  {
+func (g *Gin) Failed(errmsg string)  {
 	g.C.JSON(http.StatusInternalServerError,gin.H{
 		"state":   FAILD_CODE,
 		"message": errmsg,
-		"err_msg":err.Error(),
 	})
 }
