@@ -1,8 +1,8 @@
 package main
 
 import (
+	"cartoon-gin/models"
 	"github.com/gin-gonic/gin"
-	"log"
 	"net/http"
 )
 
@@ -63,9 +63,11 @@ func setupRouter() *gin.Engine {
 }
 
 func main() {
-	r := initRouter()
-	err := r.Run(":8080")
-	if err != nil {
-		log.Fatal("failed to start gin",err)
-	}
+	//r := initRouter()
+	//err := r.Run(":8080")
+	//if err != nil {
+	//	log.Fatal("failed to start gin",err)
+	//}
+	models.Migrate()
+
 }
