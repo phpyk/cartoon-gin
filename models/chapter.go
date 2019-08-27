@@ -7,4 +7,6 @@ type Chapter struct {
 	Name string `gorm:"size:64"`
 	WordCount int
 	Content string `sql:"type:text"`
+	Url string
+	Sequence int
 }
