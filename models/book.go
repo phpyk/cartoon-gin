@@ -1,9 +1,9 @@
 package models
 
-import "time"
+import "github.com/jinzhu/gorm"
 
 type Book struct {
-	ID        uint `gorm:"primary_key"`
+	gorm.Model
 	Name string
 	Author string `gorm:"size:32"`
 	Score float64
@@ -16,7 +16,8 @@ type Book struct {
 	IsEnd int
 	OriginBookId int
 	BookDetailUrl string
-	CreatedAt time.Time
-	UpdatedAt time.Time
-	DeletedAt *time.Time `sql:"index"`
+}
+
+func (b Book) TableName() string {
+	return "books"
 }
