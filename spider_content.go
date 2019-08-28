@@ -9,13 +9,13 @@ import (
 	"strconv"
 )
 
-var startUrl = "https://book.qidian.com/info/1015444718#Catalog"
-var imageBaseDir = "images2/";
+var bookChaptersUrl = "https://book.qidian.com/info/1015444718#Catalog"
 
 func main() {
-	ParsePage()
+	ParseChapterListPage()
 }
-func ParsePage() {
+
+func ParseChapterListPage() {
 	db,_ := models.OpenBookDB()
 
 	c := colly.NewCollector()
@@ -40,6 +40,6 @@ func ParsePage() {
 		db.Create(&chapter)
 	})
 
-	err := c.Visit(startUrl)
+	err := c.Visit(bookChaptersUrl)
 	common.CheckError(err)
 }
