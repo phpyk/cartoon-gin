@@ -89,8 +89,9 @@ func ParseBookListPage() {
 func saveBooks(books []models.Book) {
 	db,err := models.OpenBookDB()
 	common.CheckError(err)
-	for b := range books {
-		db.NewRecord(b)
-		db.Create(&b)
+	for i := range books {
+		book := books[i]
+		db.NewRecord(book)
+		db.Create(&book)
 	}
 }
