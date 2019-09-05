@@ -1,8 +1,9 @@
-package main
+package spider
 
 import (
 	"cartoon-gin/common"
-	"cartoon-gin/models"
+	"cartoon-gin/dao"
+	"cartoon-gin/DB"
 	"fmt"
 	"github.com/gocolly/colly"
 	"strconv"
@@ -17,7 +18,7 @@ func main() {
 }
 
 var isEnd int
-var books []models.Book
+var books []dao.Book
 
 func ParseBookListPage() {
 	c := colly.NewCollector()
@@ -65,7 +66,7 @@ func ParseBookListPage() {
 		category := e.DOM.Find("div.book-info > p.tag > a").Text()
 		bookDetailUrl,_ := e.DOM.Parent().Parent().Find("div.crumbs-nav.center990.top-op > span > a:nth-child(8)").First().Attr("href")
 
-		book := models.Book{
+		book := dao.Book{
 			Name:bookName,
 			Author:author,
 			Score:score,
@@ -86,8 +87,8 @@ func ParseBookListPage() {
 	saveBooks(books)
 }
 
-func saveBooks(books []models.Book) {
-	db,err := models.OpenBookDB()
+func saveBooks(books []dao.Book) {
+	db,err := DB.OpenBookDB()
 	common.CheckError(err)
 	for i := range books {
 		book := books[i]

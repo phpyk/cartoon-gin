@@ -1,9 +1,5 @@
 package main
 
-import (
-	"cartoon-gin/models"
-)
-
 
 func main() {
 	//r := initRouter()
@@ -11,6 +7,4 @@ func main() {
 	//if err != nil {
 	//	log.Fatal("failed to start gin",err)
 	//}
-	models.Migrate()
-
 }

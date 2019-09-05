@@ -1,8 +1,9 @@
-package main
+package spider
 
 import (
 	"cartoon-gin/common"
-	"cartoon-gin/models"
+	"cartoon-gin/dao"
+	"cartoon-gin/DB"
 	"fmt"
 	"github.com/gocolly/colly"
 	"log"
@@ -16,7 +17,7 @@ func main() {
 }
 
 func ParseChapterListPage() {
-	db,_ := models.OpenBookDB()
+	db,_ := DB.OpenBookDB()
 
 	c := colly.NewCollector()
 	c.OnRequest(func(request *colly.Request) {
@@ -36,7 +37,7 @@ func ParseChapterListPage() {
 		chapterName := e.Text
 		chapterUrl := e.Attr("href")
 		fmt.Printf("seq:%v -- name:%v -- url:%v \n",seq,chapterName,chapterUrl)
-		chapter := models.Chapter{Sequence:seq,Name:chapterName,Url:chapterUrl}
+		chapter := dao.Chapter{Sequence: seq,Name:chapterName,Url:chapterUrl}
 		db.Create(&chapter)
 	})
 
