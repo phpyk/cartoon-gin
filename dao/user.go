@@ -15,6 +15,10 @@ type User struct {
 	LastLoginIp,UserDevice,InviteCode string
 }
 
+type JwtToken struct {
+	Token string `json:"token"`
+}
+
 func FindUserByPhone(phone string) (user User) {
 	db,_ := DB.OpenCartoon()
 	db.Where("phone = ?",phone).First(&user)

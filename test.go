@@ -1,10 +1,15 @@
 package main
 
-import "crypto/md5"
+import (
+	"cartoon-gin/common"
+	"fmt"
+)
 
 func main() {
-	pwd := []byte("123456")
-	enPwd := md5.New()
-	enPwd.Sum(pwd)
-
+	pwd := "123456"
+	enPwd := common.Md5Str(common.Md5Str(pwd))
+	enPwd2 := common.EncryptPwd(pwd)
+	fmt.Println(pwd)
+	fmt.Println(enPwd)
+	fmt.Println(enPwd2)
 }

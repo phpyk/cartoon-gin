@@ -2,6 +2,7 @@ package common
 
 import (
 	"github.com/gin-gonic/gin"
+	"github.com/gin-gonic/gin/internal/json"
 	"net/http"
 )
 const (
@@ -11,6 +12,12 @@ const (
 
 type Gin struct {
 	C *gin.Context
+}
+
+type Response struct {
+	State int	`json:"state"`
+	Message string `json:"message"`
+	Result interface{} `json:"result"`
 }
 
 func (g *Gin) Success(data interface{}) {
@@ -26,4 +33,15 @@ func (g *Gin) Failed(errmsg string)  {
 		"state":   FAILD_CODE,
 		"message": errmsg,
 	})
+}
+
+func (g *Gin) Response(httpCode int, resp Response)  {
+	g.C.JSON(httpCode,resp)
+}
+
+func ResponseWithJson(w http.ResponseWriter, statusCode int, payload interface{}) {
+	response,_ := json.Marshal(payload)
+	w.Header().Set("Content-Type", "application/json")
+	w.WriteHeader(statusCode)
+	w.Write(response)
 }
