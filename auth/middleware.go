@@ -13,6 +13,7 @@ const SECRET_KEY = "yuekai"
 
 func GenerateToken(user *dao.User) (string, error) {
 	claims := make(jwt.MapClaims)
+	claims["sub"] = user.ID
 	claims["exp"] = time.Now().Add(time.Hour * time.Duration(24*7)).Unix()
 	claims["iat"] = time.Now().Unix()
 	token := jwt.NewWithClaims(jwt.SigningMethodHS256,claims)
