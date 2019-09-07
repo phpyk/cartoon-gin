@@ -11,6 +11,6 @@ func initRouter() *gin.Engine {
 
 	router.GET("/")
 	router.POST("/auth/login",LoginAction)
-	router.GET("/auth/me",LoginAction, auth.ValidateTokenV2())
+	router.GET("/auth/me",CurrentUserAction, auth.ValidateTokenV2())
 	return router
 }

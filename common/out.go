@@ -1,8 +1,8 @@
 package common
 
 import (
+	"encoding/json"
 	"github.com/gin-gonic/gin"
-	"github.com/gin-gonic/gin/internal/json"
 	"net/http"
 )
 const (

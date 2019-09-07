@@ -5,6 +5,7 @@ import (
 	"cartoon-gin/dao"
 	"github.com/dgrijalva/jwt-go"
 	"github.com/gin-gonic/gin"
+	"log"
 	"net/http"
 	"time"
 )
@@ -50,7 +51,8 @@ func ValidateTokenV2() gin.HandlerFunc {
 	return func(c *gin.Context) {
 		cg := common.Gin{C:c}
 
-		tokenStr := c.Request.Header.Get("authorization")
+		tokenStr := c.Request.Header.Get("Authorization")
+		log.Println("token:",tokenStr)
 		if tokenStr == "" {
 			responseNotAuthorizedV2(&cg)
 		}else {

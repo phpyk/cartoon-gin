@@ -35,3 +35,8 @@ func LoginAction(c *gin.Context) {
 	response["user_info"] = user
 	cg.Success(response)
 }
+
+func CurrentUserAction(c *gin.Context) {
+	cg := common.Gin{C:c}
+	cg.Success(nil)
+}
