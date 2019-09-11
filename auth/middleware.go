@@ -52,6 +52,7 @@ func ValidateTokenV2() gin.HandlerFunc {
 		cg := common.Gin{C:c}
 
 		tokenStr := c.Request.Header.Get("Authorization")
+		tokenStr = tokenStr[7:]
 		log.Println("token:",tokenStr)
 		if tokenStr == "" {
 			responseNotAuthorizedV2(&cg)
