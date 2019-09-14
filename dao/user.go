@@ -19,6 +19,12 @@ type JwtToken struct {
 	Token string `json:"token"`
 }
 
+func FindUserByID(id uint) (user User) {
+	db,_ := DB.OpenCartoon()
+	db.Where("id = ?",id).First(&user)
+	return user
+}
+
 func FindUserByPhone(phone string) (user User) {
 	db,_ := DB.OpenCartoon()
 	db.Where("phone = ?",phone).First(&user)

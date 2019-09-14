@@ -10,7 +10,8 @@ func initRouter() *gin.Engine {
 	router := gin.Default()
 
 	router.GET("/")
-	router.POST("/auth/login",LoginAction)
-	router.GET("/auth/me",CurrentUserAction, auth.ValidateTokenV2())
+
+	router.POST("/api/auth/login",LoginAction)
+	router.GET("/api/auth/me",auth.ValidateTokenV2(),CurrentUserAction);
 	return router
 }

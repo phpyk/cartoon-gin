@@ -38,5 +38,8 @@ func LoginAction(c *gin.Context) {
 
 func CurrentUserAction(c *gin.Context) {
 	cg := common.Gin{C:c}
-	cg.Success(nil)
+	//interface 转 uint类型
+	//cg.C.Keys["uid"].(uint)
+	me := dao.FindUserByID(cg.C.Keys["uid"].(uint))
+	cg.Success(me)
 }
