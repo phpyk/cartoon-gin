@@ -36,6 +36,10 @@ func LoginAction(c *gin.Context) {
 	cg.Success(response)
 }
 
+func LogoutAction(c *gin.Context) {
+
+}
+
 func CurrentUserAction(c *gin.Context) {
 	cg := common.Gin{C:c}
 	//interface 转 uint类型
