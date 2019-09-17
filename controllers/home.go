@@ -4,6 +4,7 @@ import (
 	"cartoon-gin/common"
 	"cartoon-gin/dao"
 	"github.com/gin-gonic/gin"
+	"log"
 	"strconv"
 )
 
@@ -24,6 +25,11 @@ func GetHomeDataAction(c *gin.Context) {
 
 func GetMoreAction(c *gin.Context){
 	cg := common.Gin{C:c}
+	log.Println(c.Request.Host)
+	log.Println(c.Request.RequestURI)
+	log.Println(c.Request.URL)
+	log.Printf("%+v",c.Request.Form)
+
 	page,_ := strconv.Atoi(c.Request.FormValue("page"))
 	pageSize,_ := strconv.Atoi(c.Request.FormValue("per_page"))
 	if page <= 0 {
@@ -34,7 +40,11 @@ func GetMoreAction(c *gin.Context){
 	}
 
 	moduleName := c.Request.FormValue("module_name")
+	totalCount := dao.GetHomeConfigRowCount(moduleName)
 	list := dao.GetMoreHomeConfigRows(moduleName,page,pageSize)
 
-	cg.Success(list)
+	responseData := make(map[string]interface{})
+	responseData["data"] = list
+	responseData = common.AppendPaginateData(responseData,totalCount ,page,pageSize,c.Request.RequestURI)
+	cg.Success(responseData)
 }

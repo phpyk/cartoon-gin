@@ -10,9 +10,16 @@ func initRouter() *gin.Engine {
 	router := gin.Default()
 
 	router.GET("/")
-	router.POST("/api/auth/login",LoginAction)
-	router.GET("/api/auth/me",auth.ValidateTokenV2(),CurrentUserAction);
 
-	router.GET("api/home",GetHomeDataAction)
+	authorize := router.Group("/api/auth")
+	{
+		authorize.POST("/login",LoginAction)
+		authorize.GET("/me",auth.ValidateTokenV2(),CurrentUserAction);
+	}
+	home := router.Group("/api/home")
+	{
+		home.GET("/",GetHomeDataAction)
+		home.GET("/more",GetMoreAction)
+	}
 	return router
 }
