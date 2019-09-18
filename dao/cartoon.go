@@ -17,6 +17,8 @@ type Cartoon struct {
 	HoverImage string `json:"hover_image"`
 	Author string `json:"author"`
 	Tags string `json:"tags"`
+	CartoonType int `json:"cartoon_type"`
+	ExternalUrl string `json:"external_url"`
 	Depiction string `json:"depiction"`
 	LatestChapter int `json:"latest_chapter"`
 	FreeType int `json:"free_type"`
