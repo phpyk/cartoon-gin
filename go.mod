@@ -6,8 +6,8 @@ require (
 	github.com/PuerkitoBio/goquery v1.5.0 // indirect
 	github.com/antchfx/htmlquery v1.0.0 // indirect
 	github.com/antchfx/xmlquery v1.0.0 // indirect
-	github.com/antchgfx/xpath v1.0.0 // indirect
-	github.com/aws/aws-sdk-go v1.24.3 // indirect
+	github.com/antchfx/xpath v1.0.0 // indirect
+	github.com/aws/aws-sdk-go v1.24.3
 	github.com/beego/bee v1.10.0
 	github.com/dchest/safefile v0.0.0-20151022103144-855e8d98f185 // indirect
 	github.com/denisenkom/go-mssqldb v0.0.0-20190820223206-44cdfe8d8ba9 // indirect

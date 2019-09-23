@@ -10,7 +10,7 @@ import (
 	"github.com/aws/aws-sdk-go/service/s3"
 )
 
-func main() {
+func upload() {
 	tagName1 := "Cost Center"
 	tagValue1 := "123456"
 	tagName2 := "Stack"

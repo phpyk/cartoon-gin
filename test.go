@@ -6,7 +6,7 @@ import (
 	"math"
 )
 
-func main() {
+func test() {
 	a := math.Ceil(11/float64(3))
 	b := 1
 	fmt.Println(a)
