@@ -1,13 +1,16 @@
 package myaws
 
 import (
-	"cartoon-gin/common"
-	"github.com/aws/aws-sdk-go/aws"
-	"github.com/aws/aws-sdk-go/aws/credentials"
-	"github.com/aws/aws-sdk-go/aws/session"
+	"io"
 	"io/ioutil"
 	"net/http"
 	"strings"
+
+	"cartoon-gin/common"
+
+	"github.com/aws/aws-sdk-go/aws"
+	"github.com/aws/aws-sdk-go/aws/credentials"
+	"github.com/aws/aws-sdk-go/aws/session"
 )
 
 func GetAwsSession() (*session.Session, error) {
@@ -37,5 +40,16 @@ func ReadSrcAndLocalSave(imageUrl string) (filename string) {
 	localFileName := dir2+"/"+arr[l-1]
 	common.CreateFile(localFileName,body)
 	return localFileName
+}
+
+func GetFileBodyAndName(imageUrl string) (string, io.Reader) {
+	resp,err := http.Get(imageUrl)
+	common.CheckError(err)
+
+	//分隔imageUrl
+	arr := strings.Split(imageUrl,"/")
+	l := len(arr)
+	name := arr[l-3]+"/"+arr[l-2]+"/"+arr[l-1]
+	return name,resp.Body
 }
 
