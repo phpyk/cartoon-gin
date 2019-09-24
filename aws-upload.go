@@ -1,67 +1,39 @@
 package main
 
 import (
+	"fmt"
+	"os"
+
 	"cartoon-gin/common"
 	"cartoon-gin/myaws"
-	"fmt"
+
 	"github.com/aws/aws-sdk-go/aws"
-	"github.com/aws/aws-sdk-go/aws/credentials"
-	"github.com/aws/aws-sdk-go/aws/session"
-	"github.com/aws/aws-sdk-go/service/s3"
+	"github.com/aws/aws-sdk-go/service/s3/s3manager"
 )
 
-func upload() {
-	tagName1 := "Cost Center"
-	tagValue1 := "123456"
-	tagName2 := "Stack"
-	tagValue2 := "MyTestStack"
+func main() {
 
 	//初始化session
-	sess,err := session.NewSession(&aws.Config{
-		Region: aws.String(myaws.REGION),
-		Credentials: credentials.NewStaticCredentials(myaws.ACCESS_KEY_ID,myaws.SECRET_ACCESS_KEY,""),
-		Endpoint:aws.String(myaws.S3_ENDPOINT),
-	})
+	sess,err := myaws.GetAwsSession()
 	common.CheckError(err)
 
-	//设置log level
-	svc := s3.New(sess,aws.NewConfig().WithLogLevel(aws.LogDebugWithHTTPBody))
+	uploader := s3manager.NewUploader(sess)
 
-	pubInput := &s3.PutBucketTaggingInput{
+	src := "http://cartoon1.qiniu.tblinker.com/30c8e1/e52e41/45c48cce.data"
+	filename := myaws.ReadSrcAndLocalSave(src)
+
+	file,err := os.Open(filename)
+	common.CheckError(err)
+	_,err = uploader.Upload(&s3manager.UploadInput{
 		Bucket:aws.String(myaws.S3_BUCKET),
-		Tagging:&s3.Tagging{
-			TagSet: []*s3.Tag{
-				{
-					Key:   aws.String(tagName1),
-					Value: aws.String(tagValue1),
-				},
-				{
-					Key:   aws.String(tagName2),
-					Value: aws.String(tagValue2),
-				},
-			},
-		},
-	}
-	_,err = svc.PutBucketTagging(pubInput)
-	common.CheckError(err)
+		Key:aws.String(filename),
+		Body:file,
+	})
 
-	getInput := &s3.GetBucketTaggingInput{
-		Bucket: aws.String(myaws.S3_BUCKET),
-	}
-	result,err := svc.GetBucketTagging(getInput)
-	common.CheckError(err)
-
-	numTags := len(result.TagSet)
-	if numTags > 0 {
-		fmt.Println("Found", numTags, "Tag(s):")
-		fmt.Println("")
-
-		for _, t := range result.TagSet {
-			fmt.Println("  Key:  ", *t.Key)
-			fmt.Println("  Value:", *t.Value)
-			fmt.Println("")
-		}
-	} else {
-		fmt.Println("Did not find any tags")
+	if err != nil {
+		// Print the error and exit.
+		fmt.Printf("Unable to upload %q to %q, %v \n", filename, myaws.S3_BUCKET, err)
+	}else {
+		fmt.Printf("Successfully uploaded %q to %q \n", filename,  myaws.S3_BUCKET)
 	}
 }
