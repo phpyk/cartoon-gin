@@ -7,15 +7,10 @@ import (
 )
 
 func GeneralPageInfo(c *gin.Context) (page, pageSize int) {
-	page, err := strconv.Atoi(c.Request.FormValue("page"))
+	page, err := strconv.Atoi(c.DefaultQuery("page","1"))
 	common.CheckError(err)
-	pageSize, err = strconv.Atoi(c.Request.FormValue("per_page"))
+	pageSize, err = strconv.Atoi(c.DefaultQuery("per_page","20"))
 	common.CheckError(err)
-	if page <= 0 {
-		page = 1
-	}
-	if pageSize <= 0 {
-		pageSize = 10
-	}
+
 	return page, pageSize
 }

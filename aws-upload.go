@@ -10,7 +10,7 @@ import (
 	"github.com/aws/aws-sdk-go/service/s3/s3manager"
 )
 
-func main() {
+func up() {
 	//初始化session
 	sess, err := myaws.GetAwsSession()
 	common.CheckError(err)

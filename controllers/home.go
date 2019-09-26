@@ -3,6 +3,7 @@ package controllers
 import (
 	"cartoon-gin/common"
 	"cartoon-gin/dao"
+	"fmt"
 	"github.com/gin-gonic/gin"
 )
 
@@ -23,7 +24,6 @@ func GetHomeDataAction(c *gin.Context) {
 
 func GetMoreAction(c *gin.Context) {
 	cg := common.Gin{C: c}
-
 	page, pageSize := GeneralPageInfo(c)
 
 	moduleName := c.Request.FormValue("module_name")
@@ -37,7 +37,15 @@ func GetMoreAction(c *gin.Context) {
 }
 
 func GetRankAction(c *gin.Context) {
-	//cg := common.Gin{C: c,}
-	//page,pageSize := GeneralPageInfo(c)
+	cg := common.Gin{C: c,}
+	page,pageSize := GeneralPageInfo(c)
+	fmt.Printf("%d,%d",page,pageSize)
+	list := dao.GetCartoonRank(page,pageSize)
 
+	totalCount := dao.GetCartoonCount()
+	responseData := make(map[string]interface{})
+	responseData["data"] = list
+	responseData = common.AppendPaginateData(responseData, totalCount, page, pageSize, c.Request.RequestURI)
+
+	cg.Success(responseData)
 }

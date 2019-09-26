@@ -21,6 +21,7 @@ func initRouter() *gin.Engine {
 	{
 		home.GET("/", GetHomeDataAction)
 		home.GET("/more", GetMoreAction)
+		home.GET("/ranking",GetRankAction)
 	}
 	return router
 }

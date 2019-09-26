@@ -1,6 +1,11 @@
 package dao
 
-import "cartoon-gin/DB"
+import (
+	"cartoon-gin/DB"
+	"cartoon-gin/common"
+	"encoding/json"
+	"strings"
+)
 
 const (
 	//审核状态
@@ -36,8 +41,52 @@ type Cartoon struct {
 	IsRated        int    `json:"is_rated"`
 }
 
+type QueryObj struct {
+	Id		int `json:"cartoon_id"`
+	CartoonName    string `json:"cartoon_name"`
+	HoverImage     string `json:"hover_image"`
+	Author         string `json:"author"`
+	Tags           string `json:"tags"`
+	ExternalUrl    string `json:"external_url"`
+	IsEnd          int    `json:"is_end"`
+	KeywordsIds    string `json:"keywords_ids"`
+	CreatedAt common.MyTime      `json:"created_at" time_format:"2006-01-02 15:04:05"`
+	UpdatedAt common.MyTime      `json:"updated_at" time_format:"2006-01-02 15:04:05"`
+}
+
 func FindCartoonById(id int) (cartoon Cartoon) {
 	db, _ := DB.OpenCartoon()
 	db.Where("id = ?", id).First(&cartoon)
 	return cartoon
+}
+
+func GetCartoonCount() (count int) {
+	db, _ := DB.OpenCartoon()
+	db.Table("cartoons").
+		Where("verify_status = ?",CARTOON_VERIFY_STATUS_PASS).Count(&count)
+	return count
+}
+
+func GetCartoonRank(page,pageSize int) []map[string]interface{} {
+	db, _ := DB.OpenCartoon()
+	var list []QueryObj
+	//columns := "hover_image, cartoon_name, author, latest_chapter, is_end, keywords_ids, tags, id as cartoon_id, created_at, updated_at"
+	db.Table("cartoons").
+		Select("cartoons.*").
+		Where("verify_status = ?",CARTOON_VERIFY_STATUS_PASS).
+		Order("read_count DESC").
+		Limit(pageSize).Offset((page-1)*pageSize).Scan(&list)
+
+	var result [](map[string]interface{})
+	for _,row := range list {
+		var item map[string]interface{}
+		jsonb,err := json.Marshal(row)
+		common.CheckError(err)
+		err = json.Unmarshal(jsonb,&item)
+
+		tagArr := strings.Split(row.Tags,",")
+		item["tags"] = tagArr
+		result = append(result,item)
+	}
+	return result
 }
