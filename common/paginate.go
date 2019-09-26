@@ -4,10 +4,10 @@ import (
 	"math"
 )
 
-func AppendPaginateData(result map[string]interface{},count,currentPage,perPage int, url string) map[string]interface{} {
+func AppendPaginateData(result map[string]interface{}, count, currentPage, perPage int, url string) map[string]interface{} {
 	result["current_page"] = currentPage
 	result["from"] = 1
-	lastPage := calcuLastPage(count,perPage)
+	lastPage := calcuLastPage(count, perPage)
 	result["last_page"] = lastPage
 	result["path"] = url
 	result["total"] = count
@@ -16,7 +16,6 @@ func AppendPaginateData(result map[string]interface{},count,currentPage,perPage 
 }
 
 func calcuLastPage(dataCount, perPage int) int {
-	fv := math.Ceil(float64(dataCount/perPage))
+	fv := math.Ceil(float64(dataCount / perPage))
 	return int(math.Ceil(fv))
 }
-

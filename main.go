@@ -8,9 +8,9 @@ import (
 
 func main() {
 	r := initRouter()
-	address := fmt.Sprintf(":%v",configs.PORT)
+	address := fmt.Sprintf(":%v", configs.PORT)
 	err := r.Run(address)
 	if err != nil {
-		log.Fatal("failed to start gin",err)
+		log.Fatal("failed to start gin", err)
 	}
 }

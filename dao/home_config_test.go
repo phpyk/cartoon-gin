@@ -6,6 +6,6 @@ import (
 )
 
 func TestGetConfigRows(t *testing.T) {
-	list := GetHomeConfigRows(MODULE_TYPE_SCROLL,5)
-	fmt.Printf("%+v",list)
+	list := GetHomeConfigRows(MODULE_TYPE_SCROLL, 5)
+	fmt.Printf("%+v", list)
 }

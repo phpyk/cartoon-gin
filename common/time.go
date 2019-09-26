@@ -25,7 +25,7 @@ func (this MyNullTime) String() string {
 
 func (this MyNullTime) MarshalJSON() ([]byte, error) {
 	if !this.Valid {
-		return []byte("null"),nil
+		return []byte("null"), nil
 	}
 	var stamp = fmt.Sprintf("\"%s\"", time.Time(this.Time).Format("2006-01-02 15:04:05"))
 	return []byte(stamp), nil

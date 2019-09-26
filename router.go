@@ -14,13 +14,13 @@ func initRouter() *gin.Engine {
 	router.GET("/")
 	authorize := router.Group("/api/auth")
 	{
-		authorize.POST("/login",LoginAction)
-		authorize.GET("/me",auth.ValidateTokenV2(),CurrentUserAction);
+		authorize.POST("/login", LoginAction)
+		authorize.GET("/me", auth.ValidateTokenV2(), CurrentUserAction)
 	}
 	home := router.Group("/api/home")
 	{
-		home.GET("/",GetHomeDataAction)
-		home.GET("/more",GetMoreAction)
+		home.GET("/", GetHomeDataAction)
+		home.GET("/more", GetMoreAction)
 	}
 	return router
 }

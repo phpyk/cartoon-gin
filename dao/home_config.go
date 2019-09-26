@@ -17,14 +17,14 @@ type HomeConfig struct {
 	ImgUrl     string `json:"img_url"`
 }
 type Result4Page struct {
-	CartoonId int `json:"cartoon_id"`
-	HoverImage string `json:"hover_image"`
-	CartoonName string `json:"cartoon_name"`
-	Author string `json:"author"`
-	Tags string `json:"tags"`
-	KeywordsIds string `json:"keywords_ids"`
-	LatestChapter int `json:"latest_chapter"`
-	IsEnd int `json:"is_end"`
+	CartoonId     int    `json:"cartoon_id"`
+	HoverImage    string `json:"hover_image"`
+	CartoonName   string `json:"cartoon_name"`
+	Author        string `json:"author"`
+	Tags          string `json:"tags"`
+	KeywordsIds   string `json:"keywords_ids"`
+	LatestChapter int    `json:"latest_chapter"`
+	IsEnd         int    `json:"is_end"`
 }
 
 const (
@@ -70,7 +70,6 @@ func GetHomeConfigRows(moduleType, limit int) []map[string]interface{} {
 	return result
 }
 
-
 func GetMoreHomeConfigRows(moduleName string, page, pageSize int) []Result4Page {
 	var list []Result4Page
 	db, _ := DB.OpenCartoon()
@@ -90,9 +89,9 @@ func GetMoreHomeConfigRows(moduleName string, page, pageSize int) []Result4Page 
 		Where("home_configs.deleted_at is null").
 		Where("home_configs.module_type = ?", moduleType).
 		Where("home_configs.config_type = ?", CONFIG_TYPE_CARTOON).
-		Where("cartoons.verify_status = ?",CARTOON_VERIFY_STATUS_PASS).
+		Where("cartoons.verify_status = ?", CARTOON_VERIFY_STATUS_PASS).
 		Limit(pageSize).
-		Offset((page-1)*pageSize).
+		Offset((page - 1) * pageSize).
 		Scan(&list)
 	return list
 }
@@ -100,8 +99,8 @@ func GetHomeConfigRowCount(moduleName string) (count int) {
 	db, _ := DB.OpenCartoon()
 	moduleType := mappingModuleType(moduleName)
 	db.Table("home_configs").
-		Where("module_type = ?",moduleType).
-		Where("config_type = ?",CONFIG_TYPE_CARTOON).Count(&count)
+		Where("module_type = ?", moduleType).
+		Where("config_type = ?", CONFIG_TYPE_CARTOON).Count(&count)
 	return count
 }
 

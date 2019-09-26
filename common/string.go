@@ -7,7 +7,7 @@ import (
 )
 
 func IsPhone(phone string) bool {
-	match,_ := regexp.MatchString(`^1[3456789]\d{9}$`,phone)
+	match, _ := regexp.MatchString(`^1[3456789]\d{9}$`, phone)
 	return match
 }
 

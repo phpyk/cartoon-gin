@@ -8,7 +8,7 @@ import (
 )
 
 func LoginAction(c *gin.Context) {
-	cg := common.Gin{C:c}
+	cg := common.Gin{C: c}
 	phone := c.Request.FormValue("phone")
 	password := c.Request.FormValue("password")
 
@@ -24,9 +24,9 @@ func LoginAction(c *gin.Context) {
 		cg.Failed("密码不正确")
 	}
 
-	token,err := auth.GenerateToken(&user)
+	token, err := auth.GenerateToken(&user)
 	if err != nil {
-		cg.Failed("Login failed:"+err.Error())
+		cg.Failed("Login failed:" + err.Error())
 	}
 
 	response := make(map[string]interface{})
@@ -41,7 +41,7 @@ func LogoutAction(c *gin.Context) {
 }
 
 func CurrentUserAction(c *gin.Context) {
-	cg := common.Gin{C:c}
+	cg := common.Gin{C: c}
 	//interface 转 uint类型
 	//cg.C.Keys["uid"].(uint)
 	me := dao.FindUserByID(cg.C.Keys["uid"].(uint))

@@ -7,9 +7,16 @@ import (
 	_ "github.com/jinzhu/gorm/dialects/mysql"
 )
 
-
 func OpenBookDB() (*gorm.DB, error) {
-	db, err := gorm.Open("mysql","root:hajgv8t24oA9@(123.206.107.76:3306)/books?charset=utf8mb4&parseTime=True")
+	conn := fmt.Sprintf("%v:%v@(%v:%v)/%v?charset=%v&parseTime=%v",
+		configs.DB_USERNAME,
+		configs.DB_PASSWORD,
+		configs.DB_HOST,
+		configs.DB_PORT,
+		"books",
+		configs.DB_CHARSET,
+		configs.DB_PARSE_TIME)
+	db, err := gorm.Open(configs.DB_CONNECTION,conn)
 	if err != nil {
 		panic(err)
 		defer db.Close()
@@ -18,16 +25,16 @@ func OpenBookDB() (*gorm.DB, error) {
 }
 
 func OpenCartoon() (*gorm.DB, error) {
-	connectionUrl := fmt.Sprintf("%v:%v@(%v:%v)/%v?charset=%v&parseTime=%v",
+	conn := fmt.Sprintf("%v:%v@(%v:%v)/%v?charset=%v&parseTime=%v",
 		configs.DB_USERNAME,
 		configs.DB_PASSWORD,
 		configs.DB_HOST,
 		configs.DB_PORT,
-		configs.DB_DATABASE,
+		"cartoon",
 		configs.DB_CHARSET,
 		configs.DB_PARSE_TIME)
 
-	db, err :=  gorm.Open(configs.DB_CONNECTION,connectionUrl)
+	db, err :=  gorm.Open(configs.DB_CONNECTION,conn)
 	if err != nil {
 		panic(err)
 		defer db.Close()
