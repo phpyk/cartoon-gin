@@ -10,9 +10,16 @@ type Image struct {
 	IsDeleted int `json:"is_deleted"`
 }
 
-func FindImageByChapterId(chapterId int) []Image {
+func FindImagesByChapterId(chapterId int) []Image {
 	db,_ := DB.OpenCartoon()
 	var list []Image
 	db.Table("cartoon_images").Where("chapter_id = ?",chapterId).Scan(&list)
+	return list
+}
+
+func FindImagesByCartoonId(cartoonId int) []Image {
+	db,_ := DB.OpenCartoon()
+	var list []Image
+	db.Table("cartoon_images").Where("cartoon_id = ?",cartoonId).Scan(&list)
 	return list
 }

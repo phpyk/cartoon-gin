@@ -17,8 +17,8 @@ func main() {
 
 	uploader := s3manager.NewUploader(sess)
 
-	cpid := 231754
-	imgList := dao.FindImageByChapterId(cpid)
+	cpid := 4196
+	imgList := dao.FindImagesByCartoonId(cpid)
 
 	for _,row := range imgList {
 		src := row.ImageAddr
