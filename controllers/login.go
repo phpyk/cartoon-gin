@@ -28,7 +28,7 @@ func LoginAction(c *gin.Context) {
 		cg.Failed("密码不正确")
 	}
 
-	resp,err := loginUser(user,c)
+	resp, err := loginUser(user, c)
 	if err != nil {
 		cg.Failed("login faild via:" + err.Error())
 	}
@@ -36,14 +36,14 @@ func LoginAction(c *gin.Context) {
 }
 
 //VisitorLoginAction create a visitor and login
-func VisitorLoginAction(c *gin.Context)  {
+func VisitorLoginAction(c *gin.Context) {
 	cg := common.Gin{C: c}
-	if _ , ok := c.Request.Header["H-Device"]; !ok {
+	if _, ok := c.Request.Header["H-Device"]; !ok {
 		cg.Failed("device_token is required")
 	}
 	devices := c.Request.Header["H-Device"]
 	//replace blank
-	device := strings.ReplaceAll(devices[0]," ","")
+	device := strings.ReplaceAll(devices[0], " ", "")
 	if len(device) == 0 {
 		cg.Failed("device_token is required")
 	}
@@ -61,7 +61,7 @@ func VisitorLoginAction(c *gin.Context)  {
 		user.UserDevice = device
 		dao.UserCreate(user)
 	}
-	resp ,err := loginUser(user,c)
+	resp, err := loginUser(user, c)
 
 	if err != nil {
 		cg.Failed("login faild via:" + err.Error())
@@ -82,11 +82,11 @@ func CurrentUserAction(c *gin.Context) {
 }
 
 //loginUser handle user login
-func loginUser(user dao.User,c *gin.Context) (map[string]interface{}, error) {
+func loginUser(user dao.User, c *gin.Context) (map[string]interface{}, error) {
 	lastLoginTime := uint(time.Now().Unix())
 	lastLoginIp := c.Request.RemoteAddr
 	db, _ := DB.OpenCartoon()
-	db.Model(&user).Updates(dao.User{LastLoginIp:lastLoginIp,LastLoginTime:lastLoginTime})
+	db.Model(&user).Updates(dao.User{LastLoginIp: lastLoginIp, LastLoginTime: lastLoginTime})
 
 	token, err := auth.GenerateToken(&user)
 
@@ -94,5 +94,5 @@ func loginUser(user dao.User,c *gin.Context) (map[string]interface{}, error) {
 	resp["token"] = token
 	resp["token_type"] = "Bearer"
 	resp["user_info"] = user
-	return resp,err
+	return resp, err
 }

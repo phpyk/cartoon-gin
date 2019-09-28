@@ -36,11 +36,11 @@ func GetMoreAction(c *gin.Context) {
 }
 
 func GetRankAction(c *gin.Context) {
-	cg := common.Gin{C: c,}
-	page,pageSize := GeneralPageInfo(c)
+	cg := common.Gin{C: c}
+	page, pageSize := GeneralPageInfo(c)
 
 	sortBy := "read_count"
-	list := dao.GetCartoonRank(page,pageSize,sortBy,"DESC")
+	list := dao.GetCartoonRank(page, pageSize, sortBy, "DESC")
 
 	totalCount := dao.GetCartoonCount()
 	responseData := make(map[string]interface{})
@@ -51,10 +51,10 @@ func GetRankAction(c *gin.Context) {
 }
 
 func GetNewCartoonsAction(c *gin.Context) {
-	cg := common.Gin{C: c,}
-	page,pageSize := GeneralPageInfo(c)
+	cg := common.Gin{C: c}
+	page, pageSize := GeneralPageInfo(c)
 	sortBy := "created_at"
-	list := dao.GetCartoonRank(page,pageSize,sortBy,"DESC")
+	list := dao.GetCartoonRank(page, pageSize, sortBy, "DESC")
 	totalCount := dao.GetCartoonCount()
 	responseData := make(map[string]interface{})
 	responseData["data"] = list
