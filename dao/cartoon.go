@@ -49,6 +49,7 @@ type QueryObj struct {
 	Tags           string `json:"tags"`
 	ExternalUrl    string `json:"external_url"`
 	IsEnd          int    `json:"is_end"`
+	LatestChapter	int `json:"latest_chapter"`
 	KeywordsIds    string `json:"keywords_ids"`
 	CreatedAt common.MyTime      `json:"created_at" time_format:"2006-01-02 15:04:05"`
 	UpdatedAt common.MyTime      `json:"updated_at" time_format:"2006-01-02 15:04:05"`
@@ -67,14 +68,14 @@ func GetCartoonCount() (count int) {
 	return count
 }
 
-func GetCartoonRank(page,pageSize int) []map[string]interface{} {
+func GetCartoonRank(page,pageSize int,sortBy,sort string,) []map[string]interface{} {
 	db, _ := DB.OpenCartoon()
 	var list []QueryObj
 	//columns := "hover_image, cartoon_name, author, latest_chapter, is_end, keywords_ids, tags, id as cartoon_id, created_at, updated_at"
 	db.Table("cartoons").
 		Select("cartoons.*").
 		Where("verify_status = ?",CARTOON_VERIFY_STATUS_PASS).
-		Order("read_count DESC").
+		Order(sortBy+" "+sort).
 		Limit(pageSize).Offset((page-1)*pageSize).Scan(&list)
 
 	var result [](map[string]interface{})

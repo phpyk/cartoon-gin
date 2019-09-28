@@ -15,6 +15,7 @@ func initRouter() *gin.Engine {
 	authorize := router.Group("/api/auth")
 	{
 		authorize.POST("/login", LoginAction)
+		authorize.POST("/visitor-login", VisitorLoginAction)
 		authorize.GET("/me", auth.ValidateTokenV2(), CurrentUserAction)
 	}
 	home := router.Group("/api/home")
@@ -22,6 +23,7 @@ func initRouter() *gin.Engine {
 		home.GET("/", GetHomeDataAction)
 		home.GET("/more", GetMoreAction)
 		home.GET("/ranking",GetRankAction)
+		home.GET("/new-cartoons",GetNewCartoonsAction)
 	}
 	return router
 }

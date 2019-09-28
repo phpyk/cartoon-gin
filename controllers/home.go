@@ -3,13 +3,12 @@ package controllers
 import (
 	"cartoon-gin/common"
 	"cartoon-gin/dao"
-	"fmt"
 	"github.com/gin-gonic/gin"
 )
 
 func GetHomeDataAction(c *gin.Context) {
 	cg := common.Gin{C: c}
-	//user := dao.FindUserByID(cg.C.Keys["uid"].(uint))
+	//user := dao.UserFindByID(cg.C.Keys["uid"].(uint))
 	homeData := make(map[string]interface{})
 
 	homeData["scroll_list"] = dao.GetHomeConfigRows(dao.MODULE_TYPE_SCROLL, 5)
@@ -39,9 +38,23 @@ func GetMoreAction(c *gin.Context) {
 func GetRankAction(c *gin.Context) {
 	cg := common.Gin{C: c,}
 	page,pageSize := GeneralPageInfo(c)
-	fmt.Printf("%d,%d",page,pageSize)
-	list := dao.GetCartoonRank(page,pageSize)
 
+	sortBy := "read_count"
+	list := dao.GetCartoonRank(page,pageSize,sortBy,"DESC")
+
+	totalCount := dao.GetCartoonCount()
+	responseData := make(map[string]interface{})
+	responseData["data"] = list
+	responseData = common.AppendPaginateData(responseData, totalCount, page, pageSize, c.Request.RequestURI)
+
+	cg.Success(responseData)
+}
+
+func GetNewCartoonsAction(c *gin.Context) {
+	cg := common.Gin{C: c,}
+	page,pageSize := GeneralPageInfo(c)
+	sortBy := "created_at"
+	list := dao.GetCartoonRank(page,pageSize,sortBy,"DESC")
 	totalCount := dao.GetCartoonCount()
 	responseData := make(map[string]interface{})
 	responseData["data"] = list
