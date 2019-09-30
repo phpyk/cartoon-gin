@@ -42,13 +42,14 @@ func ReadSrcAndLocalSave(imageUrl string) (filename string) {
 	return localFileName
 }
 
-func GetFileBodyAndName(imageUrl string) (string, io.Reader) {
-	resp, err := http.Get(imageUrl)
+func GetFileBodyAndName(imageHttpUrl string) (string, io.Reader) {
+	resp, err := http.Get(imageHttpUrl)
 	common.CheckError(err)
 
 	//分隔imageUrl
-	arr := strings.Split(imageUrl, "/")
+	arr := strings.Split(imageHttpUrl, "/")
 	l := len(arr)
 	name := arr[l-3] + "/" + arr[l-2] + "/" + arr[l-1]
 	return name, resp.Body
 }
+
