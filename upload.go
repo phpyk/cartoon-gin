@@ -31,7 +31,7 @@ func main()  {
 
 
 	//1.read image path
-	bookId := "4192"
+	bookId := "1194"
 	path := BASE_PATH+bookId
 	readImages(path)
 
