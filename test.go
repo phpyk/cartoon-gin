@@ -4,15 +4,14 @@ import (
 	"cartoon-gin/common"
 	"fmt"
 	"math"
-	"reflect"
 	"time"
 )
 
 func main() {
 	//t := time.Now().Format("2006-01-02 15:04:05")
-	t2 := time.Now().Unix()
-	fmt.Println(reflect.TypeOf(t2))
-	fmt.Println(t2)
+	t1 := time.Now()
+
+	fmt.Println(t1)
 
 	a := math.Ceil(11 / float64(3))
 	b := 1
@@ -29,4 +28,7 @@ func main() {
 	fmt.Println(pwd)
 	fmt.Println(enPwd)
 	fmt.Println(enPwd2)
+
+	escaped := time.Since(t1)
+	fmt.Print(escaped)
 }
