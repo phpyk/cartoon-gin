@@ -39,7 +39,6 @@ func main()  {
 	for _,s := range imageLocalPaths {
 		beginUpload(s)
 	}
-
 }
 
 func readImages(path string) {
