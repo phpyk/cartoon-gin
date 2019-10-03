@@ -16,6 +16,6 @@ const (
 
 
 	REDIS_HOST     = "127.0.0.1"
-	REDIS_PASSWORD = ""
+	REDIS_PASSWORD = "RtOzhz1288"
 	REDIS_PORT     = 6379
 )

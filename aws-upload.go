@@ -12,14 +12,15 @@ import (
 )
 
 func main() {
+	timeBegin := time.Now()
 	//初始化session
 	sess, err := myaws.GetAwsSession()
 	common.CheckError(err)
 
 	uploader := s3manager.NewUploader(sess)
 
-	cpid := 4196
-	imgList := dao.FindImagesByCartoonId(cpid)
+	cpid := 4445
+	imgList := dao.FindImagesForUpload(cpid)
 	fmt.Printf("count:%d \n",len(imgList))
 
 	for _, row := range imgList {
@@ -42,4 +43,6 @@ func main() {
 		fmt.Printf("Successfully uploaded %q to %q -- escaped: %v\n", filename, myaws.S3_BUCKET,escaped)
 	}
 
+	totalTime := time.Since(timeBegin)
+	fmt.Printf("Done total_time:%d \n",totalTime)
 }

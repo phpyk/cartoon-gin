@@ -23,3 +23,10 @@ func FindImagesByCartoonId(cartoonId int) []Image {
 	db.Table("cartoon_images").Where("cartoon_id = ?", cartoonId).Scan(&list)
 	return list
 }
+
+func FindImagesForUpload(offset int) []Image {
+	db, _ := DB.OpenCartoon()
+	var list []Image
+	db.Table("cartoon_images").Limit(1000).Offset(offset).Scan(&list)
+	return list
+}
