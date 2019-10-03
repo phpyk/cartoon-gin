@@ -19,8 +19,7 @@ func main() {
 
 	uploader := s3manager.NewUploader(sess)
 
-	cpid := 4445
-	imgList := dao.FindImagesForUpload(cpid)
+	imgList := dao.FindImagesForUpload(0)
 	fmt.Printf("count:%d \n",len(imgList))
 
 	for _, row := range imgList {
