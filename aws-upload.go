@@ -26,6 +26,7 @@ func main() {
 		t1 := time.Now()
 		src := row.ImageAddr
 		filename, filebody := myaws.GetFileBodyAndName(src)
+		fmt.Println(filename)
 		common.CheckError(err)
 
 		_, err = uploader.Upload(&s3manager.UploadInput{
