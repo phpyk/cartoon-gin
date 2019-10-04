@@ -10,7 +10,6 @@ import (
 	"github.com/aws/aws-sdk-go/service/s3"
 	"github.com/aws/aws-sdk-go/service/s3/s3manager"
 	"io/ioutil"
-	"qiniupkg.com/x/log.v7"
 	"strconv"
 	"time"
 )
@@ -55,7 +54,7 @@ func main() {
 			ACL:         aws.String(s3.ObjectCannedACLPublicRead),
 		})
 		if err != nil {
-			log.Println("error row_id=%v",row.ID)
+			fmt.Printf("error row_id=%v msg=",row.ID,err.Error())
 			continue
 		}
 
