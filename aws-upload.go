@@ -54,7 +54,7 @@ func main() {
 			ACL:         aws.String(s3.ObjectCannedACLPublicRead),
 		})
 		if err != nil {
-			fmt.Printf("error row_id=%v msg=",row.ID,err.Error())
+			fmt.Printf("error row_id=%v msg=%v \n",row.ID,err.Error())
 			continue
 		}
 
