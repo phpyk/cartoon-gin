@@ -19,7 +19,15 @@ var idfile = "../max_id.log"
 
 func main() {
 	limit := flag.Int("limit",1000,"limit")
-	lastMaxId := getMaxId()
+	begin := flag.Int("begin",0,"begin")
+	flag.Parse()
+	var lastMaxId int
+	fmt.Println("begin:",*begin)
+	if *begin > 0 {
+		lastMaxId = *begin
+	}else {
+		lastMaxId = getMaxId()
+	}
 	fmt.Println("max_id:",lastMaxId)
 
 	timeBegin := time.Now()
