@@ -20,6 +20,7 @@ var idfile = "../max_id.log"
 func main() {
 	limit := flag.Int("limit",1000,"limit")
 	lastMaxId := getMaxId()
+	fmt.Println("max_id:",lastMaxId)
 
 	timeBegin := time.Now()
 	//初始化session
