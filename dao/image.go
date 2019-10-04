@@ -1,6 +1,8 @@
 package dao
 
-import "cartoon-gin/DB"
+import (
+	"cartoon-gin/DB"
+)
 
 type Image struct {
 	MyGormModel
@@ -24,9 +26,9 @@ func FindImagesByCartoonId(cartoonId int) []Image {
 	return list
 }
 
-func FindImagesForUpload(offset int) []Image {
+func FindImagesForUpload(limit int,lastMaxId int) []Image {
 	db, _ := DB.OpenCartoon()
 	var list []Image
-	db.Table("cartoon_images").Limit(1000).Offset(offset).Scan(&list)
+	db.Table("cartoon_images").Where("id > ?",lastMaxId).Limit(limit).Order("id ASC").Scan(&list)
 	return list
 }

@@ -7,10 +7,10 @@ const (
 
 	//开发数据库
 	DB_CONNECTION = "mysql"
-	DB_HOST       = "123.206.107.76"
+	DB_HOST       = "rm-bp182b54vp31708v0do.mysql.rds.aliyuncs.com"
 	DB_PORT       = 3306
 	DB_USERNAME   = "root"
-	DB_PASSWORD   = "hajgv8t24oA9"
+	DB_PASSWORD   = "cartoon@Rays-tech$2019"
 	DB_CHARSET    = "utf8mb4"
 	DB_PARSE_TIME = "true"
 
