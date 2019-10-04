@@ -54,12 +54,12 @@ func main() {
 		fmt.Printf("Successfully uploaded %q to %q -- escaped: %v\n", filename, myaws.S3_BUCKET,escaped)
 		if row.ID > maxId {
 			maxId = row.ID
+			saveMaxId(maxId)
 		}
 	}
 
 	totalTime := time.Since(timeBegin)
 	fmt.Printf("Done total_time:%v \n",totalTime)
-	saveMaxId(maxId)
 }
 
 func getMaxId() int {
