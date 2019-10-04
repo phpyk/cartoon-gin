@@ -15,7 +15,7 @@ import (
 	"time"
 )
 
-var idfile = "../max_id.log"
+var idfile = "/data/webroot/go/max_id.log"
 
 func main() {
 	limit := flag.Int("limit",1000,"limit")
