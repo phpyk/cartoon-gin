@@ -22,7 +22,7 @@ func main() {
 	flag.Parse()
 	var lastMaxId int
 	fmt.Println("begin:",*begin)
-	if *begin >= 0 {
+	if *begin > 0 {
 		lastMaxId = *begin
 	}else {
 		lastMaxId = getMaxId()
