@@ -23,7 +23,7 @@ var qiniuPaths []string
 var chapterHoverImages map[string]string
 
 var uploader *s3manager.Uploader
-func main()  {
+func UploadToAwsFromLocalFile()  {
 	//上传aws
 	sess, err := myaws.GetAwsSession()
 	common.CheckError(err)

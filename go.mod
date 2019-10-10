@@ -49,5 +49,4 @@ require (
 	google.golang.org/genproto v0.0.0-20190819201941-24fa4b261c55 // indirect
 	google.golang.org/grpc v1.23.0 // indirect
 	honnef.co/go/tools v0.0.1-2019.2.2 // indirect
-	qiniupkg.com/x v7.0.8+incompatible // indirect
 )
