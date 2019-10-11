@@ -33,6 +33,6 @@ func GetChapterRow(cid string) Chapter {
 func FindChaptersForUpload(limit int,lastMaxId int) []Chapter {
 	db, _ := DB.OpenCartoon()
 	var list []Chapter
-	db.Table("cartoon_chapters").Where("id > ?",lastMaxId).Limit(limit).Order("id ASC").Scan(&list)
+	db.Table("cartoon_chapters").Where("id > ?",lastMaxId).Where("hover_image != ?","").Limit(limit).Order("id ASC").Scan(&list)
 	return list
 }
