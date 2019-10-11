@@ -14,7 +14,7 @@ import (
 	"time"
 )
 
-var idfile = "/data/webroot/go/max_chapter_id.log"
+var idfile = "/data/webroot/go/max_cartoon_id.log"
 
 func main() {
 	limit := flag.Int("limit",1000,"limit")
@@ -27,7 +27,7 @@ func main() {
 	}else {
 		lastMaxId = getMaxId()
 	}
-	fmt.Println("max_chapter_id:",lastMaxId)
+	fmt.Println("max_cartoon_id:",lastMaxId)
 
 	timeBegin := time.Now()
 	//初始化session
@@ -36,7 +36,7 @@ func main() {
 
 	uploader := s3manager.NewUploader(sess)
 
-	imgList := dao.FindChaptersForUpload(*limit,lastMaxId)
+	imgList := dao.FindCartoonsHoverImageForUpload(*limit,lastMaxId)
 
 	fmt.Printf("count:%d \n",len(imgList))
 

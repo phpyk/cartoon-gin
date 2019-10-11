@@ -91,3 +91,10 @@ func GetCartoonRank(page, pageSize int, sortBy, sort string) []map[string]interf
 	}
 	return result
 }
+
+func FindCartoonsHoverImageForUpload(limit,lastMaxId int) []Cartoon {
+	db, _ := DB.OpenCartoon()
+	var list []Cartoon
+	db.Table("cartoons").Where("id > ?",lastMaxId).Where("hover_image like ?","%qiniu.tblinker%").Order("id ASC").Limit(limit).Scan(&list)
+	return list
+}
