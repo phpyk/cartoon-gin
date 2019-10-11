@@ -19,6 +19,12 @@ func FindImagesByChapterId(chapterId int) []Image {
 	return list
 }
 
+func FindImagesListById(ids []string) []Image {
+	db, _ := DB.OpenCartoon()
+	var list []Image
+	db.Table("cartoon_images").Where("id in (?)", ids).Scan(&list)
+	return list
+}
 func FindImagesByCartoonId(cartoonId int) []Image {
 	db, _ := DB.OpenCartoon()
 	var list []Image

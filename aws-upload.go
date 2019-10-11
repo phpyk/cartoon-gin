@@ -14,7 +14,7 @@ import (
 	"time"
 )
 
-var idfile = "/data/webroot/go/max_cartoon_id.log"
+var idfile = "../../max_cartoon_id.log"
 
 func main() {
 	limit := flag.Int("limit",1000,"limit")
@@ -22,7 +22,7 @@ func main() {
 	flag.Parse()
 	var lastMaxId int
 	fmt.Println("begin:",*begin)
-	if *begin > 0 {
+	if *begin >= 0 {
 		lastMaxId = *begin
 	}else {
 		lastMaxId = getMaxId()
@@ -37,7 +37,6 @@ func main() {
 	uploader := s3manager.NewUploader(sess)
 
 	imgList := dao.FindCartoonsHoverImageForUpload(*limit,lastMaxId)
-
 	fmt.Printf("count:%d \n",len(imgList))
 
 	maxId := 0

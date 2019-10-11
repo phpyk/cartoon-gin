@@ -47,9 +47,16 @@ func GetFileBodyAndName(imageHttpUrl string) (string, io.Reader) {
 	common.CheckError(err)
 
 	//分隔imageUrl
-	arr := strings.Split(imageHttpUrl, "/")
-	l := len(arr)
-	name := arr[l-3] + "/" + arr[l-2] + "/" + arr[l-1]
+	idx := strings.Index(imageHttpUrl,".com/")
+
+	substr := imageHttpUrl[idx+5:]
+	arr := strings.Split(substr, "/")
+
+	var name string
+	for _,v := range arr {
+		name += "/"+v
+	}
+	name = name[1:]
 	return name, resp.Body
 }
 
