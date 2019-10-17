@@ -2,7 +2,8 @@ package dao
 
 import (
 	"cartoon-gin/DB"
-	"cartoon-gin/common"
+	"cartoon-gin/utils"
+
 	"encoding/json"
 	"strings"
 )
@@ -42,17 +43,17 @@ type Cartoon struct {
 }
 
 type QueryObj struct {
-	Id            int           `json:"cartoon_id"`
-	CartoonName   string        `json:"cartoon_name"`
-	HoverImage    string        `json:"hover_image"`
-	Author        string        `json:"author"`
-	Tags          string        `json:"tags"`
-	ExternalUrl   string        `json:"external_url"`
-	IsEnd         int           `json:"is_end"`
-	LatestChapter int           `json:"latest_chapter"`
-	KeywordsIds   string        `json:"keywords_ids"`
-	CreatedAt     common.MyTime `json:"created_at" time_format:"2006-01-02 15:04:05"`
-	UpdatedAt     common.MyTime `json:"updated_at" time_format:"2006-01-02 15:04:05"`
+	Id            int          `json:"cartoon_id"`
+	CartoonName   string       `json:"cartoon_name"`
+	HoverImage    string       `json:"hover_image"`
+	Author        string       `json:"author"`
+	Tags          string       `json:"tags"`
+	ExternalUrl   string       `json:"external_url"`
+	IsEnd         int          `json:"is_end"`
+	LatestChapter int          `json:"latest_chapter"`
+	KeywordsIds   string       `json:"keywords_ids"`
+	CreatedAt     utils.MyTime `json:"created_at" time_format:"2006-01-02 15:04:05"`
+	UpdatedAt     utils.MyTime `json:"updated_at" time_format:"2006-01-02 15:04:05"`
 }
 
 func FindCartoonById(id int) (cartoon Cartoon) {
@@ -82,7 +83,7 @@ func GetCartoonRank(page, pageSize int, sortBy, sort string) []map[string]interf
 	for _, row := range list {
 		var item map[string]interface{}
 		jsonb, err := json.Marshal(row)
-		common.CheckError(err)
+		utils.CheckError(err)
 		err = json.Unmarshal(jsonb, &item)
 
 		tagArr := strings.Split(row.Tags, ",")

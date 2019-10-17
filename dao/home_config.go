@@ -1,10 +1,11 @@
 package dao
 
 import (
-	"cartoon-gin/DB"
-	"cartoon-gin/common"
 	"encoding/json"
 	"strings"
+
+	"cartoon-gin/DB"
+	"cartoon-gin/utils"
 )
 
 type HomeConfig struct {
@@ -51,11 +52,11 @@ func GetHomeConfigRows(moduleType, limit int) []map[string]interface{} {
 		//item := structs.Map(row)
 		//所以先将row转为json，再反序列化，生成的key为小写
 		jsonb, err := json.Marshal(row)
-		common.CheckError(err)
+		utils.CheckError(err)
 
 		var item map[string]interface{}
 		err = json.Unmarshal(jsonb, &item)
-		common.CheckError(err)
+		utils.CheckError(err)
 
 		if row.ConfigType == CONFIG_TYPE_CARTOON && row.CartoonId > 0 {
 			cartoon := FindCartoonById(row.CartoonId)

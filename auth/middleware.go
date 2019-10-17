@@ -1,7 +1,7 @@
 package auth
 
 import (
-	"cartoon-gin/common"
+	"cartoon-gin/utils"
 	"cartoon-gin/dao"
 	"github.com/dgrijalva/jwt-go"
 	"github.com/gin-gonic/gin"
@@ -54,7 +54,7 @@ func ValidateToken(next http.Handler) http.HandlerFunc {
 
 func ValidateTokenV2() gin.HandlerFunc {
 	return func(c *gin.Context) {
-		cg := common.Gin{C: c}
+		cg := utils.Gin{C: c}
 
 		tokenStr := c.Request.Header.Get("Authorization")
 		tokenStr = tokenStr[7:]
@@ -84,10 +84,10 @@ func ValidateTokenV2() gin.HandlerFunc {
 }
 
 func responseNotAuthorized(w http.ResponseWriter) {
-	response := common.Response{State: 0, Message: "You are unauthorized"}
-	common.ResponseWithJson(w, http.StatusUnauthorized, response)
+	response := utils.Response{State: 0, Message: "You are unauthorized"}
+	utils.ResponseWithJson(w, http.StatusUnauthorized, response)
 }
-func responseNotAuthorizedV2(cg *common.Gin) {
-	myResponse := common.Response{State: 0, Message: "You are unauthorized", Result: nil}
+func responseNotAuthorizedV2(cg *utils.Gin) {
+	myResponse := utils.Response{State: 0, Message: "You are unauthorized", Result: nil}
 	cg.Response(http.StatusUnauthorized, myResponse)
 }

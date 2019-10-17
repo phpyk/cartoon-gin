@@ -3,7 +3,7 @@ package configs
 const (
 	GIN_MODE = "debug" //release
 	HOST     = "http://localhost"
-	PORT	 = 8081
+	PORT	 = 8080
 
 	//开发数据库
 	DB_CONNECTION = "mysql"

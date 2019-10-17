@@ -6,7 +6,7 @@ import (
 	"net/http"
 	"strings"
 
-	"cartoon-gin/common"
+	"cartoon-gin/utils"
 
 	"github.com/aws/aws-sdk-go/aws"
 	"github.com/aws/aws-sdk-go/aws/credentials"
@@ -24,27 +24,27 @@ func GetAwsSession() (*session.Session, error) {
 
 func ReadSrcAndLocalSave(imageUrl string) (filename string) {
 	resp, err := http.Get(imageUrl)
-	common.CheckError(err)
+	utils.CheckError(err)
 	body, err := ioutil.ReadAll(resp.Body)
-	common.CheckError(err)
+	utils.CheckError(err)
 
 	//分隔imageUrl,创建文件夹
 	arr := strings.Split(imageUrl, "/")
 	l := len(arr)
 	dir1 := arr[l-3]
-	common.CreateDirIfNotExists(dir1)
+	utils.CreateDirIfNotExists(dir1)
 
 	dir2 := dir1 + "/" + arr[l-2]
-	common.CreateDirIfNotExists(dir2)
+	utils.CreateDirIfNotExists(dir2)
 
 	localFileName := dir2 + "/" + arr[l-1]
-	common.CreateFile(localFileName, body)
+	utils.CreateFile(localFileName, body)
 	return localFileName
 }
 
 func GetFileBodyAndName(imageHttpUrl string) (string, io.Reader) {
 	resp, err := http.Get(imageHttpUrl)
-	common.CheckError(err)
+	utils.CheckError(err)
 
 	//分隔imageUrl
 	idx := strings.Index(imageHttpUrl,".com/")

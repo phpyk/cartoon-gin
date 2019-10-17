@@ -3,7 +3,7 @@ package controllers
 import (
 	"cartoon-gin/DB"
 	"cartoon-gin/auth"
-	"cartoon-gin/common"
+	"cartoon-gin/utils"
 	"cartoon-gin/dao"
 	"github.com/gin-gonic/gin"
 	"strings"
@@ -12,18 +12,18 @@ import (
 
 //LoginAction handle login by phone and password
 func LoginAction(c *gin.Context) {
-	cg := common.Gin{C: c}
+	cg := utils.Gin{C: c}
 	phone := c.Request.FormValue("phone")
 	password := c.Request.FormValue("password")
 
-	if !common.IsPhone(phone) {
+	if !utils.IsPhone(phone) {
 		cg.Failed("手机号格式不正确")
 	}
 	user := dao.UserFindByPhone(phone)
 	if !(user.ID > 0) {
 		cg.Failed("用户不存在")
 	}
-	encryptPwd := common.EncryptPwd(password)
+	encryptPwd := utils.EncryptPwd(password)
 	if encryptPwd != user.Password {
 		cg.Failed("密码不正确")
 	}
@@ -37,7 +37,7 @@ func LoginAction(c *gin.Context) {
 
 //VisitorLoginAction create a visitor and login
 func VisitorLoginAction(c *gin.Context) {
-	cg := common.Gin{C: c}
+	cg := utils.Gin{C: c}
 	if _, ok := c.Request.Header["H-Device"]; !ok {
 		cg.Failed("device_token is required")
 	}
@@ -51,12 +51,12 @@ func VisitorLoginAction(c *gin.Context) {
 	//create a visitor user
 	if user.ID == 0 {
 		var code string
-		code = common.GeneralInviteCode()
+		code = utils.GeneralInviteCode()
 		for dao.UserInviteCodeExists(code) {
-			code = common.GeneralInviteCode()
+			code = utils.GeneralInviteCode()
 		}
 		user.InviteCode = code
-		user.NickName = common.GeneralNickName()
+		user.NickName = utils.GeneralNickName()
 		user.UserType = dao.USER_TYPE_VISITOR
 		user.UserDevice = device
 		dao.UserCreate(user)
@@ -74,7 +74,7 @@ func LogoutAction(c *gin.Context) {
 }
 
 func CurrentUserAction(c *gin.Context) {
-	cg := common.Gin{C: c}
+	cg := utils.Gin{C: c}
 	//interface 转 uint类型
 	//cg.C.Keys["uid"].(uint)
 	me := dao.UserFindByID(cg.C.Keys["uid"].(uint))

@@ -1,17 +1,18 @@
-package main
+package scripts
 
 import (
-	"cartoon-gin/common"
-	"cartoon-gin/myaws"
 	"fmt"
-	"github.com/aws/aws-sdk-go/aws"
-	"github.com/aws/aws-sdk-go/service/s3"
-	"github.com/aws/aws-sdk-go/service/s3/s3manager"
 	"io"
 	"io/ioutil"
 	"log"
-	"qiniupkg.com/x/bytes.v7"
 	"strings"
+
+	"cartoon-gin/myaws"
+	"cartoon-gin/utils"
+	"github.com/aws/aws-sdk-go/aws"
+	"github.com/aws/aws-sdk-go/service/s3"
+	"github.com/aws/aws-sdk-go/service/s3/s3manager"
+	"qiniupkg.com/x/bytes.v7"
 )
 
 const BASE_PATH = "/home/cartoon-spider/waiwai/"
@@ -26,7 +27,7 @@ var uploader *s3manager.Uploader
 func UploadToAwsFromLocalFile()  {
 	//上传aws
 	sess, err := myaws.GetAwsSession()
-	common.CheckError(err)
+	utils.CheckError(err)
 	uploader = s3manager.NewUploader(sess)
 
 
@@ -42,7 +43,7 @@ func UploadToAwsFromLocalFile()  {
 }
 
 func readImages(path string) {
-	if !common.DirExists(path) {
+	if !utils.DirExists(path) {
 		log.Fatal("dir not exists:",path)
 	}
 	chapterDirs,err := ioutil.ReadDir(path)
@@ -72,7 +73,7 @@ func beginUpload(localpath string) {
 	uploadPath := ""
 	for _,v := range dirArr {
 		if !strings.Contains(v,".jpg") {
-			md5str := common.Md5Str(v)
+			md5str := utils.Md5Str(v)
 			uploadPath += md5str[0:6]+"/"
 		}else {
 			//章节封面
@@ -80,13 +81,13 @@ func beginUpload(localpath string) {
 
 			}
 			l := strings.Split(v,".")
-			name := common.Md5Str(l[0])[0:8]
+			name := utils.Md5Str(l[0])[0:8]
 			uploadPath += name+".data"
 		}
 	}
 
 	filename := uploadPath
-	buffer := common.GetFileBufferFromLocal(localpath)
+	buffer := utils.GetFileBufferFromLocal(localpath)
 	//去掉前两个byte
 	buffer = buffer[2:]
 	reader := bytes.NewReader(buffer)
@@ -101,7 +102,7 @@ func toS3(filename string,fileBody io.Reader) {
 		ContentType: aws.String("image/jpeg"),
 		ACL:         aws.String(s3.ObjectCannedACLPublicRead),
 	})
-	common.CheckError(err)
+	utils.CheckError(err)
 
 	fmt.Println("success -- ",filename)
 }

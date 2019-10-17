@@ -1,13 +1,13 @@
 package controllers
 
 import (
-	"cartoon-gin/common"
 	"cartoon-gin/dao"
+	"cartoon-gin/utils"
 	"github.com/gin-gonic/gin"
 )
 
 func GetHomeDataAction(c *gin.Context) {
-	cg := common.Gin{C: c}
+	cg := utils.Gin{C: c}
 	//user := dao.UserFindByID(cg.C.Keys["uid"].(uint))
 	homeData := make(map[string]interface{})
 
@@ -22,7 +22,7 @@ func GetHomeDataAction(c *gin.Context) {
 }
 
 func GetMoreAction(c *gin.Context) {
-	cg := common.Gin{C: c}
+	cg := utils.Gin{C: c}
 	page, pageSize := GeneralPageInfo(c)
 
 	moduleName := c.Request.FormValue("module_name")
@@ -31,12 +31,12 @@ func GetMoreAction(c *gin.Context) {
 
 	responseData := make(map[string]interface{})
 	responseData["data"] = list
-	responseData = common.AppendPaginateData(responseData, totalCount, page, pageSize, c.Request.RequestURI)
+	responseData = utils.AppendPaginateData(responseData, totalCount, page, pageSize, c.Request.RequestURI)
 	cg.Success(responseData)
 }
 
 func GetRankAction(c *gin.Context) {
-	cg := common.Gin{C: c}
+	cg := utils.Gin{C: c}
 	page, pageSize := GeneralPageInfo(c)
 
 	sortBy := "read_count"
@@ -45,20 +45,20 @@ func GetRankAction(c *gin.Context) {
 	totalCount := dao.GetCartoonCount()
 	responseData := make(map[string]interface{})
 	responseData["data"] = list
-	responseData = common.AppendPaginateData(responseData, totalCount, page, pageSize, c.Request.RequestURI)
+	responseData = utils.AppendPaginateData(responseData, totalCount, page, pageSize, c.Request.RequestURI)
 
 	cg.Success(responseData)
 }
 
 func GetNewCartoonsAction(c *gin.Context) {
-	cg := common.Gin{C: c}
+	cg := utils.Gin{C: c}
 	page, pageSize := GeneralPageInfo(c)
 	sortBy := "created_at"
 	list := dao.GetCartoonRank(page, pageSize, sortBy, "DESC")
 	totalCount := dao.GetCartoonCount()
 	responseData := make(map[string]interface{})
 	responseData["data"] = list
-	responseData = common.AppendPaginateData(responseData, totalCount, page, pageSize, c.Request.RequestURI)
+	responseData = utils.AppendPaginateData(responseData, totalCount, page, pageSize, c.Request.RequestURI)
 
 	cg.Success(responseData)
 }

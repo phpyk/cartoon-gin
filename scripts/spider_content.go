@@ -1,7 +1,7 @@
-package spider
+package scripts
 
 import (
-	"cartoon-gin/common"
+	"cartoon-gin/utils"
 	"cartoon-gin/dao"
 	"cartoon-gin/DB"
 	"fmt"
@@ -42,5 +42,5 @@ func ParseChapterListPage() {
 	})
 
 	err := c.Visit(bookChaptersUrl)
-	common.CheckError(err)
+	utils.CheckError(err)
 }

@@ -1,14 +1,15 @@
-package common
+package utils
 
 import (
-	"github.com/dchest/captcha"
 	"os"
 	"time"
+
+	"github.com/dchest/captcha"
 )
 
 const (
 	// Default number of digits in captcha solution.
-	DefaultLen = 6
+	DefaultLen = 4
 	// The number of captchas created that triggers garbage collection used
 	// by default store.
 	CollectNum = 100
@@ -19,9 +20,13 @@ const (
 	StdHeight = 80
 )
 
-func GetNewCaptcha() string {
-	var capid string
-	capid = captcha.New()
+var (
+	GlobalStore = captcha.NewMemoryStore(CollectNum, Expiration)
+)
+
+func GetNewCaptcha() (capid string,imgData string) {
+	captcha.SetCustomStore(GlobalStore)
+	capid = captcha.NewLen(DefaultLen)
 
 	fname := os.Getenv("GOPATH")+"/tmp/"+capid+".png"
 	f,err := os.Create(fname)
@@ -30,10 +35,17 @@ func GetNewCaptcha() string {
 
 	err = captcha.WriteImage(f,capid,StdWidth,StdHeight)
 	CheckError(err)
-	return capid
+
+	return capid, Base64String(fname)
+}
+
+func GetCaptchaVal(id string) []byte {
+	captcha.SetCustomStore(GlobalStore)
+	return GlobalStore.Get(id,false)
 }
 
 func CheckCaptcha(capid string,value []byte) bool {
+	captcha.SetCustomStore(GlobalStore)
 	return captcha.Verify(capid,value)
 }
 

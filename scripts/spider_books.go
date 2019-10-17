@@ -1,12 +1,12 @@
-package spider
+package scripts
 
 import (
-	"cartoon-gin/common"
-	"cartoon-gin/dao"
-	"cartoon-gin/DB"
 	"fmt"
-	"github.com/gocolly/colly"
 	"strconv"
+
+	"cartoon-gin/DB"
+	"cartoon-gin/dao"
+	"github.com/gocolly/colly"
 
 	//"strconv"
 )
@@ -58,7 +58,7 @@ func ParseBookListPage() {
 		score2 := e.DOM.Find("#score2").First().Text()
 		//fmt.Println("score2",score2)
 		score,err := strconv.ParseFloat(score1+"."+score2,32)
-		common.CheckError(err)
+		utils.CheckError(err)
 		descShort := e.DOM.Find("p.intro").First().Text()
 		descLong := e.DOM.Parent().Find("div.left-wrap.fl > div.book-info-detail > div.book-intro > p").First().Text()
 
@@ -83,13 +83,13 @@ func ParseBookListPage() {
 	})
 
 	err := c.Visit(bookListUrl)
-	common.CheckError(err)
+	utils.CheckError(err)
 	saveBooks(books)
 }
 
 func saveBooks(books []dao.Book) {
 	db,err := DB.OpenBookDB()
-	common.CheckError(err)
+	utils.CheckError(err)
 	for i := range books {
 		book := books[i]
 		db.NewRecord(book)

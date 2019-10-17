@@ -7,9 +7,7 @@ require (
 	github.com/antchfx/htmlquery v1.0.0 // indirect
 	github.com/antchfx/xmlquery v1.0.0 // indirect
 	github.com/antchfx/xpath v1.0.0 // indirect
-	github.com/astaxie/beego v1.12.0
 	github.com/aws/aws-sdk-go v1.24.3
-	github.com/beego/bee v1.10.0
 	github.com/dchest/captcha v0.0.0-20170622155422-6a29415a8364
 	github.com/dchest/safefile v0.0.0-20151022103144-855e8d98f185 // indirect
 	github.com/denisenkom/go-mssqldb v0.0.0-20190820223206-44cdfe8d8ba9 // indirect
@@ -51,5 +49,4 @@ require (
 	google.golang.org/genproto v0.0.0-20190819201941-24fa4b261c55 // indirect
 	google.golang.org/grpc v1.23.0 // indirect
 	honnef.co/go/tools v0.0.1-2019.2.2 // indirect
-	qiniupkg.com/x v7.0.8+incompatible
 )

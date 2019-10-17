@@ -1,17 +1,18 @@
-package main
+package scripts
 
 import (
-	"cartoon-gin/common"
-	"cartoon-gin/dao"
-	"cartoon-gin/myaws"
 	"flag"
 	"fmt"
-	"github.com/aws/aws-sdk-go/aws"
-	"github.com/aws/aws-sdk-go/service/s3"
-	"github.com/aws/aws-sdk-go/service/s3/s3manager"
 	"io/ioutil"
 	"strconv"
 	"time"
+
+	"cartoon-gin/dao"
+	"cartoon-gin/myaws"
+	"cartoon-gin/utils"
+	"github.com/aws/aws-sdk-go/aws"
+	"github.com/aws/aws-sdk-go/service/s3"
+	"github.com/aws/aws-sdk-go/service/s3/s3manager"
 )
 
 var idfile = "../../max_cartoon_id.log"
@@ -32,7 +33,7 @@ func main() {
 	timeBegin := time.Now()
 	//初始化session
 	sess, err := myaws.GetAwsSession()
-	common.CheckError(err)
+	utils.CheckError(err)
 
 	uploader := s3manager.NewUploader(sess)
 
@@ -71,13 +72,13 @@ func main() {
 
 func getMaxId() int {
 	c,err := ioutil.ReadFile(idfile)
-	common.CheckError(err)
+	utils.CheckError(err)
 	i,err := strconv.Atoi(string(c))
-	common.CheckError(err)
+	utils.CheckError(err)
 	return i
 }
 func saveMaxId(id int) {
 	b := []byte(strconv.Itoa(id))
 	err := ioutil.WriteFile(idfile,b,0644)
-	common.CheckError(err)
+	utils.CheckError(err)
 }

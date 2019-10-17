@@ -1,7 +1,6 @@
 package main
 
 import (
-	"cartoon-gin/redis"
 	"fmt"
 	"unsafe"
 )
@@ -20,8 +19,7 @@ func init() {
 	fmt.Println("test init")
 }
 
-func main() {
-	redis.Test()
+func test() {
 
 	fmt.Println("Sunday:",Sunday)
 	fmt.Println("Monday:",Monday)

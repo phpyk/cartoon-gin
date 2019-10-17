@@ -1,15 +1,15 @@
 package dao
 
 import (
-	"cartoon-gin/common"
+	"cartoon-gin/utils"
 	"time"
 )
 
 type MyGormModel struct {
 	ID        int               `gorm:"primary_key" json:"id"`
-	CreatedAt time.Time          `json:"created_at" time_format:"2006-01-02 15:04:05"`
-	UpdatedAt time.Time          `json:"updated_at" time_format:"2006-01-02 15:04:05"`
-	DeletedAt *common.MyNullTime `json:"deleted_at" `
+	CreatedAt time.Time         `json:"created_at" time_format:"2006-01-02 15:04:05"`
+	UpdatedAt time.Time         `json:"updated_at" time_format:"2006-01-02 15:04:05"`
+	DeletedAt *utils.MyNullTime `json:"deleted_at" `
 }
 
 type Paginate struct {
