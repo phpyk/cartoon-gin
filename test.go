@@ -2,7 +2,10 @@ package main
 
 import (
 	"fmt"
+	"time"
 	"unsafe"
+
+	"cartoon-gin/utils"
 )
 
 const (
@@ -19,7 +22,24 @@ func init() {
 	fmt.Println("test init")
 }
 
+func main() {
+	smsClient := utils.NewSmsClient()
+
+	fmt.Printf("client:%+v \n",smsClient)
+
+	to := "17505818455"
+	data := []string{"8810","5"}
+	templateId := 424738
+
+	result ,err := smsClient.SendTemplateSMS(to,data,templateId)
+	if err != nil {
+		panic(err)
+	}
+	fmt.Printf("result : %+v",result)
+}
+
 func test() {
+	fmt.Println(time.Now().Format("20060102150405"))
 
 	fmt.Println("Sunday:",Sunday)
 	fmt.Println("Monday:",Monday)

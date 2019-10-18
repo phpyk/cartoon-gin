@@ -36,7 +36,7 @@ func GetNewCaptcha() (capid string,imgData string) {
 	err = captcha.WriteImage(f,capid,StdWidth,StdHeight)
 	CheckError(err)
 
-	return capid, Base64String(fname)
+	return capid, ImageBase64String(fname)
 }
 
 func GetCaptchaVal(id string) []byte {

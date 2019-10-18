@@ -30,7 +30,6 @@ func EncryptPwd(originPwd string) string {
 	return hex.EncodeToString(b2)
 }
 
-
 func RandomString(l,strType int) string {
 	var c string
 	if strType == 1 {
