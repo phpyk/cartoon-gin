@@ -16,9 +16,9 @@ func TestGetFileBufferFromLocal(t *testing.T) {
 	fmt.Println(hex.EncodeToString(buffer))
 	var f *os.File
 	var filename = "/Users/kaiyue/Downloads/go.data"
-	f,err := os.Create(filename)
+	f, err := os.Create(filename)
 	CheckError(err)
-	_,err = f.Write(buffer)
+	_, err = f.Write(buffer)
 	CheckError(err)
 
 }

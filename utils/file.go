@@ -13,18 +13,18 @@ func CreateFile(filename string, body []byte) {
 	CheckError(e)
 }
 
-func GetFileBufferFromLocal(localPath string) ([]byte) {
-	file,err := os.Open(localPath)
+func GetFileBufferFromLocal(localPath string) []byte {
+	file, err := os.Open(localPath)
 	CheckError(err)
 	defer file.Close()
 
-	fileinfo,err := file.Stat()
+	fileinfo, err := file.Stat()
 	CheckError(err)
 
 	filesize := fileinfo.Size()
 	buffer := make([]byte, filesize)
 
-	_,err = file.Read(buffer)
+	_, err = file.Read(buffer)
 	CheckError(err)
 	return buffer
 }

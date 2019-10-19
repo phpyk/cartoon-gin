@@ -16,12 +16,12 @@ func TestIsPhone(t *testing.T) {
 }
 func TestRandomString(t *testing.T) {
 	l := 30
-	str := RandomString(l,5)
+	str := RandomString(l, 5)
 	fmt.Println(str)
 }
 
 func TestGeneralInviteCode(t *testing.T) {
-	for i := 0;i<10;i++ {
+	for i := 0; i < 10; i++ {
 		fmt.Println(GeneralInviteCode())
 	}
 }

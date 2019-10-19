@@ -86,13 +86,13 @@ func (c *SmsClient) SendTemplateSMS(to string, data []string, templateId int) (r
 	s := c.AccountSid + ":" + c.Batch
 	authen := base64.StdEncoding.EncodeToString([]byte(s))
 	// 添加包头
-	request ,err := http.NewRequest("POST",url,strings.NewReader(body))
-	request.Header.Add("Accept","application/"+c.BodyType)
-	request.Header.Add("Content-Type","application/"+c.BodyType+";charset=utf-8")
-	request.Header.Add("Authorization",authen)
+	request, err := http.NewRequest("POST", url, strings.NewReader(body))
+	request.Header.Add("Accept", "application/"+c.BodyType)
+	request.Header.Add("Content-Type", "application/"+c.BodyType+";charset=utf-8")
+	request.Header.Add("Authorization", authen)
 	// 发送请求
 	clt := http.Client{}
-	response,err := clt.Do(request)
+	response, err := clt.Do(request)
 	log.Printf("response:%+v\n", response.Body)
 
 	resultB, err := ioutil.ReadAll(response.Body)

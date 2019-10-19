@@ -27,7 +27,9 @@ func initRouter() *gin.Engine {
 	}
 	common := router.Group("/api/common")
 	{
-		common.GET("/captcha",CaptchaAction)
+		common.POST("/captcha",CaptchaAction)
+		common.POST("/captcha-check",CaptchaCheckAction)
+		common.POST("/verify-code", SendSMSVerifyCodeAction)
 	}
 	return router
 }

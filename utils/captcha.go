@@ -24,16 +24,16 @@ var (
 	GlobalStore = captcha.NewMemoryStore(CollectNum, Expiration)
 )
 
-func GetNewCaptcha() (capid string,imgData string) {
+func GetNewCaptcha() (capid string, imgData string) {
 	captcha.SetCustomStore(GlobalStore)
 	capid = captcha.NewLen(DefaultLen)
 
-	fname := os.Getenv("GOPATH")+"/tmp/"+capid+".png"
-	f,err := os.Create(fname)
+	fname := os.Getenv("GOPATH") + "/tmp/" + capid + ".png"
+	f, err := os.Create(fname)
 	CheckError(err)
 	defer f.Close()
 
-	err = captcha.WriteImage(f,capid,StdWidth,StdHeight)
+	err = captcha.WriteImage(f, capid, StdWidth, StdHeight)
 	CheckError(err)
 
 	return capid, ImageBase64String(fname)
@@ -41,12 +41,10 @@ func GetNewCaptcha() (capid string,imgData string) {
 
 func GetCaptchaVal(id string) []byte {
 	captcha.SetCustomStore(GlobalStore)
-	return GlobalStore.Get(id,false)
+	return GlobalStore.Get(id, false)
 }
 
-func CheckCaptcha(capid string,value []byte) bool {
+func CheckCaptcha(capid string, value []byte) bool {
 	captcha.SetCustomStore(GlobalStore)
-	return captcha.Verify(capid,value)
+	return captcha.Verify(capid, value)
 }
-
-

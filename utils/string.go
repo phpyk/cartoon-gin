@@ -30,23 +30,23 @@ func EncryptPwd(originPwd string) string {
 	return hex.EncodeToString(b2)
 }
 
-func RandomString(l,strType int) string {
+func RandomString(l, strType int) string {
 	var c string
 	if strType == 1 {
 		c = "0123456789"
-	}else if strType == 2 {
+	} else if strType == 2 {
 		c = "abcdefghijklmnopqrstuvwxyz"
-	}else if strType == 3 {
+	} else if strType == 3 {
 		c = "ABCDEFGHIJKLMNOPQRSTUVWXYZ"
-	}else if strType == 4 {
+	} else if strType == 4 {
 		c = "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ"
-	}else if strType == 5 {
+	} else if strType == 5 {
 		c = "ABCDEFGHJKLMNPQRSTUVWXYZ23456789"
-	}else {
+	} else {
 		c = "0123456789abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ"
 	}
 	b := make([]byte, l)
-	for i := 0;i < l; i++ {
+	for i := 0; i < l; i++ {
 		idx := rand.Intn(len(c))
 		b[i] = c[idx]
 	}
@@ -54,7 +54,7 @@ func RandomString(l,strType int) string {
 }
 
 func GeneralInviteCode() string {
-	code := RandomString(6,5)
+	code := RandomString(6, 5)
 	return code
 }
 
