@@ -1,2 +1,3 @@
 myaws/configs.go
+configs/app.go
 .DS_Store
