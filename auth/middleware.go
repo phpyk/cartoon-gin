@@ -34,6 +34,7 @@ func ValidateToken(next http.Handler) http.HandlerFunc {
 		tokenStr := r.Header.Get("authorization")
 		if tokenStr == "" {
 			responseNotAuthorized(w)
+			return
 		} else {
 			/**
 			 * tokenStr解析成token对象
@@ -41,11 +42,13 @@ func ValidateToken(next http.Handler) http.HandlerFunc {
 			token, _ := jwt.Parse(tokenStr, func(token *jwt.Token) (i interface{}, e error) {
 				if _, ok := token.Method.(*jwt.SigningMethodHMAC); !ok {
 					responseNotAuthorized(w)
+					return
 				}
 				return []byte(SECRET_KEY), nil
 			})
 			if !token.Valid {
 				responseNotAuthorized(w)
+				return
 			}
 			next.ServeHTTP(w, r)
 		}
@@ -59,19 +62,19 @@ func ValidateTokenV2() gin.HandlerFunc {
 		tokenStr := c.Request.Header.Get("Authorization")
 		tokenStr = tokenStr[7:]
 		if tokenStr == "" {
-			responseNotAuthorizedV2(&cg)
+			cg.UnAuthorized()
 		} else {
 			/**
 			 * tokenStr解析成token对象
 			 */
 			token, _ := jwt.ParseWithClaims(tokenStr, &MyClaims{}, func(token *jwt.Token) (i interface{}, e error) {
 				if _, ok := token.Method.(*jwt.SigningMethodHMAC); !ok {
-					responseNotAuthorizedV2(&cg)
+					cg.UnAuthorized()
 				}
 				return []byte(SECRET_KEY), nil
 			})
 			if !token.Valid {
-				responseNotAuthorizedV2(&cg)
+				cg.UnAuthorized()
 			}
 			//这里这样调用时什么意思，我也不知道
 			myClaims := token.Claims.(*MyClaims)
@@ -86,8 +89,6 @@ func ValidateTokenV2() gin.HandlerFunc {
 func responseNotAuthorized(w http.ResponseWriter) {
 	response := utils.Response{State: 0, Message: "You are unauthorized"}
 	utils.ResponseWithJson(w, http.StatusUnauthorized, response)
+	return
 }
-func responseNotAuthorizedV2(cg *utils.Gin) {
-	myResponse := utils.Response{State: 0, Message: "You are unauthorized", Result: nil}
-	cg.Response(http.StatusUnauthorized, myResponse)
-}
+

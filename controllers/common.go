@@ -25,6 +25,7 @@ func CaptchaCheckAction(c *gin.Context) {
 		cg.Success(nil)
 	} else {
 		cg.Failed("图形验证码不正确")
+		return
 	}
 }
 
@@ -33,12 +34,14 @@ func SendSMSVerifyCodeAction(c *gin.Context) {
 	phone := c.Request.FormValue("phone")
 	if !utils.IsPhone(phone) {
 		cg.Failed("手机号格式不正确")
+		return
 	}
 
 	captchaVal := c.Request.FormValue("captcha_value")
 	captchaKey := c.Request.FormValue("captcha_key")
 	if !utils.CheckCaptcha(captchaKey, []byte(captchaVal)) {
 		cg.Failed("图形验证码不正确")
+		return
 	}
 
 	randomStr := utils.RandomString(4, 1)
@@ -51,6 +54,7 @@ func SendSMSVerifyCodeAction(c *gin.Context) {
 		cg.Success(nil)
 	}else {
 		cg.Failed("发送验证码失败")
+		return
 	}
 }
 
