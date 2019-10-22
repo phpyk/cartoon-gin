@@ -15,6 +15,7 @@ func initRouter() *gin.Engine {
 	authorize := router.Group("/api/auth")
 	{
 		authorize.POST("/login", LoginAction)
+		authorize.POST("/pwd-login", PasswordLoginAction)
 		authorize.POST("/visitor-login", VisitorLoginAction)
 		authorize.GET("/me", auth.ValidateTokenV2(), CurrentUserAction)
 	}

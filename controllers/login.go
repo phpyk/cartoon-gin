@@ -11,8 +11,8 @@ import (
 	"github.com/gin-gonic/gin"
 )
 
-//LoginAction handle login by phone and password
-func LoginAction(c *gin.Context) {
+//PasswordLoginAction handle login by phone and password
+func PasswordLoginAction(c *gin.Context) {
 	cg := utils.Gin{C: c}
 	phone := c.Request.FormValue("phone")
 	password := c.Request.FormValue("password")
@@ -32,6 +32,31 @@ func LoginAction(c *gin.Context) {
 		return
 	}
 
+	resp, err := loginUser(user, c)
+	if err != nil {
+		cg.Error("login faild via:" + err.Error())
+		return
+	}
+	cg.Success(resp)
+}
+
+func LoginAction(c *gin.Context) {
+	cg := utils.Gin{C: c,}
+	phone := c.Request.FormValue("phone")
+	if !utils.IsPhone(phone) {
+		cg.Failed("手机号格式不正确")
+		return
+	}
+	smsCode := c.Request.FormValue("verify_code")
+	if !checkSmsCode(phone,smsCode) {
+		cg.Failed("手机号验证码不正确")
+		return
+	}
+	user := dao.UserFindByPhone(phone)
+	if !(user.ID > 0) {
+		cg.Failed("用户不存在")
+		return
+	}
 	resp, err := loginUser(user, c)
 	if err != nil {
 		cg.Error("login faild via:" + err.Error())
@@ -108,4 +133,14 @@ func loginUser(user dao.User, c *gin.Context) (map[string]interface{}, error) {
 	resp["token_type"] = "Bearer"
 	resp["user_info"] = user
 	return resp, err
+}
+
+func checkSmsCode(phone, code string) bool {
+	redisClient := utils.NewRedisClient()
+	par := make(map[string]string)
+	par["phone"] = phone
+	key := utils.GetRedisKey(utils.RDS_KEY_SMS_CODE,par)
+	redisCode,err := redisClient.Get(key).Result()
+	utils.CheckError(err)
+	return redisCode == code
 }

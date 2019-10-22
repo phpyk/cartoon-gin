@@ -46,11 +46,12 @@ func SendSMSVerifyCodeAction(c *gin.Context) {
 
 	randomStr := utils.RandomString(4, 1)
 	smsClient := utils.NewSmsClient()
-	sendResult,err := smsClient.SendTemplateSMS(phone,[]string{randomStr,"5分钟"},1)
+	templateId := 424738
+	sendResult,err := smsClient.SendTemplateSMS(phone,[]string{randomStr,"5分钟"},templateId)
 	utils.CheckError(err)
 
 	if err == nil && sendResult["statusCode"] == "000000" {
-		saveCodeToRedis(randomStr)
+		saveCodeToRedis(phone,randomStr)
 		cg.Success(nil)
 	}else {
 		cg.Failed("发送验证码失败")
@@ -58,10 +59,10 @@ func SendSMSVerifyCodeAction(c *gin.Context) {
 	}
 }
 
-func saveCodeToRedis(code string) bool {
+func saveCodeToRedis(phone,code string) bool {
 	redisClient := utils.NewRedisClient()
 	par := make(map[string]string)
-	par["phone"] = code
+	par["phone"] = phone
 	key := utils.GetRedisKey(utils.RDS_KEY_SMS_CODE,par)
 	expireTime := 5 * time.Minute
 	ok,err := redisClient.Set(key,code,expireTime).Result()
