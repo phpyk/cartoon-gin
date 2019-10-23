@@ -76,7 +76,7 @@ func ValidateTokenV2() gin.HandlerFunc {
 			if !token.Valid {
 				cg.UnAuthorized()
 			}
-			//这里这样调用时什么意思，我也不知道
+			//claims interface 转为 mycliaims
 			myClaims := token.Claims.(*MyClaims)
 			log.Printf("claims: %+v \n", myClaims)
 			c.Set("uid", myClaims.UID)
