@@ -18,7 +18,7 @@ import (
 var idfile = "../../max_cartoon_id.log"
 
 func main() {
-	limit := flag.Int("limit",1000,"limit")
+	//limit := flag.Int("limit",1000,"limit")
 	begin := flag.Int("begin",0,"begin")
 	flag.Parse()
 	var lastMaxId int
@@ -37,13 +37,14 @@ func main() {
 
 	uploader := s3manager.NewUploader(sess)
 
-	imgList := dao.FindCartoonsHoverImageForUpload(*limit,lastMaxId)
+	//imgList := dao.FindCartoonsHoverImageForUpload(*limit,lastMaxId)
+	imgList := dao.FindImagesByCartoonId(4180)
 	fmt.Printf("count:%d \n",len(imgList))
 
 	maxId := 0
 	for _, row := range imgList {
 		t1 := time.Now()
-		src := row.HoverImage
+		src := row.ImageAddr
 		filename, filebody := myaws.GetFileBodyAndName(src)
 
 		_, err = uploader.Upload(&s3manager.UploadInput{
