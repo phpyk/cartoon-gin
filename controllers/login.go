@@ -102,6 +102,21 @@ func VisitorLoginAction(c *gin.Context) {
 	cg.Success(resp)
 }
 
+func LoginDevAccount(c *gin.Context) {
+	cg := utils.Gin{C:c}
+	user := dao.UserFindByPhone("17505818455")
+	if !(user.ID > 0) {
+		cg.Failed("用户不存在")
+		return
+	}
+	resp, err := loginUser(user, c)
+	if err != nil {
+		cg.Error("login faild via:" + err.Error())
+		return
+	}
+	cg.Success(resp)
+}
+
 func LogoutAction(c *gin.Context) {
 
 }

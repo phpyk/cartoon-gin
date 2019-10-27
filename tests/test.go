@@ -1,10 +1,13 @@
 package main
 
 import (
+	"encoding/base64"
+	"encoding/json"
 	"fmt"
 	"time"
 	"unsafe"
 
+	"cartoon-gin/dao"
 	"cartoon-gin/utils"
 )
 
@@ -23,6 +26,27 @@ func init() {
 }
 
 func main() {
+	user := dao.UserFindByID(111)
+	fmt.Printf("%v\n",user)
+	jsonU,err := json.Marshal(user)
+	utils.CheckError(err)
+	fmt.Println(string(jsonU))
+
+
+	base64str := base64.StdEncoding.EncodeToString(jsonU)
+	fmt.Println(base64str)
+	byteu,err  := base64.StdEncoding.DecodeString(base64str)
+	utils.CheckError(err)
+	fmt.Println(string(byteu))
+
+	var newUser dao.User
+	err = json.Unmarshal(byteu,&newUser)
+	utils.CheckError(err)
+	fmt.Printf("new user :%+v\n",newUser)
+}
+
+func testSendSms() {
+
 	smsClient := utils.NewSmsClient()
 
 	fmt.Printf("client:%+v \n",smsClient)

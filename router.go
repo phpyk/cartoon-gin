@@ -15,8 +15,10 @@ func initRouter() *gin.Engine {
 	authorize := router.Group("/api/auth")
 	{
 		authorize.POST("/login", LoginAction)
+		authorize.Any("/login-dev",LoginDevAccount)
 		authorize.POST("/pwd-login", PasswordLoginAction)
 		authorize.POST("/visitor-login", VisitorLoginAction)
+		authorize.POST("/logout",auth.ValidateTokenV2(),LogoutAction)
 		authorize.GET("/me", auth.ValidateTokenV2(), CurrentUserAction)
 	}
 	home := router.Group("/api/home")
