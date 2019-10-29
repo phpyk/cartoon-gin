@@ -32,7 +32,8 @@ func PasswordLoginAction(c *gin.Context) {
 		return
 	}
 
-	resp, err := loginUser(user, c)
+	//resp, err := loginUserWithJWT(user, c)
+	resp, err := loginUserWithRedisAuth(user, c)
 	if err != nil {
 		cg.Error("login faild via:" + err.Error())
 		return
@@ -57,7 +58,8 @@ func LoginAction(c *gin.Context) {
 		cg.Failed("用户不存在")
 		return
 	}
-	resp, err := loginUser(user, c)
+	//resp, err := loginUserWithJWT(user, c)
+	resp, err := loginUserWithRedisAuth(user, c)
 	if err != nil {
 		cg.Error("login faild via:" + err.Error())
 		return
@@ -93,7 +95,8 @@ func VisitorLoginAction(c *gin.Context) {
 		user.UserDevice = device
 		dao.UserCreate(user)
 	}
-	resp, err := loginUser(user, c)
+	//resp, err := loginUserWithJWT(user, c)
+	resp, err := loginUserWithRedisAuth(user, c)
 
 	if err != nil {
 		cg.Error("login faild via:" + err.Error())
@@ -109,7 +112,9 @@ func LoginDevAccount(c *gin.Context) {
 		cg.Failed("用户不存在")
 		return
 	}
-	resp, err := loginUser(user, c)
+	//resp, err := loginUserWithJWT(user, c)
+
+	resp,err  := loginUserWithRedisAuth(user,c)
 	if err != nil {
 		cg.Error("login faild via:" + err.Error())
 		return
@@ -118,24 +123,38 @@ func LoginDevAccount(c *gin.Context) {
 }
 
 func LogoutAction(c *gin.Context) {
+	cg := utils.Gin{C: c}
 
+	token := c.Request.Header.Get("Authorization")
+	if token == "" || len(token) <= 7 {
+		cg.UnAuthorized()
+	}
+	token = token[7:]
+	clt := utils.NewAuthRedisClient()
+	sts := clt.Del(token)
+	_,err := sts.Result()
+	if err != nil {
+		cg.Failed("退出失败")
+	}
+	cg.Success(nil)
 }
 
 func CurrentUserAction(c *gin.Context) {
 	cg := utils.Gin{C: c}
 	//interface 转 uint类型
 	//cg.C.Keys["uid"].(uint)
-	uid := cg.C.Keys["uid"]
-	if uid == nil {
+	user := cg.C.Keys["user"]
+	if user == nil {
 		cg.Failed("用户未登陆")
 		return
 	}
-	me := dao.UserFindByID(cg.C.Keys["uid"].(uint))
+	//me := dao.UserFindByID(cg.C.Keys["uid"].(uint))
+	me := cg.C.Keys["user"].(dao.User)
 	cg.Success(me)
 }
 
-//loginUser handle user login
-func loginUser(user dao.User, c *gin.Context) (map[string]interface{}, error) {
+//loginUserWithJWT handle user login
+func loginUserWithJWT(user dao.User, c *gin.Context) (map[string]interface{}, error) {
 	lastLoginTime := uint(time.Now().Unix())
 	lastLoginIp := c.Request.RemoteAddr
 	db, _ := DB.OpenCartoon()
@@ -149,6 +168,20 @@ func loginUser(user dao.User, c *gin.Context) (map[string]interface{}, error) {
 	resp["user_info"] = user
 	return resp, err
 }
+func loginUserWithRedisAuth(user dao.User,c *gin.Context) (map[string]interface{}, error) {
+	lastLoginTime := uint(time.Now().Unix())
+	lastLoginIp := c.Request.RemoteAddr
+	db, _ := DB.OpenCartoon()
+	db.Model(&user).Updates(dao.User{LastLoginIp: lastLoginIp, LastLoginTime: lastLoginTime})
+
+	token,err := auth.GenerateRedisToken(&user)
+
+	resp := make(map[string]interface{})
+	resp["token"] = token
+	resp["token_type"] = ""
+	resp["user_info"] = user
+	return resp, err
+}
 
 func checkSmsCode(phone, code string) bool {
 	redisClient := utils.NewRedisClient()
@@ -159,3 +192,4 @@ func checkSmsCode(phone, code string) bool {
 	utils.CheckError(err)
 	return redisCode == code
 }
+

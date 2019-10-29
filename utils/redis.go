@@ -46,7 +46,15 @@ func NewRedisClient() *redis.Client {
 	return redis.NewClient(&redis.Options{
 		Addr:     configs.REDIS_HOST + ":" + configs.REDIS_PORT,
 		Password: configs.REDIS_PASSWORD,
-		DB:       configs.REDIS_DB,
+		DB:       configs.REDIS_DB_DEFAULT,
+	})
+}
+
+func NewAuthRedisClient() *redis.Client {
+	return redis.NewClient(&redis.Options{
+		Addr:     configs.REDIS_HOST + ":" + configs.REDIS_PORT,
+		Password: configs.REDIS_PASSWORD,
+		DB:       configs.REDIS_DB_AUTHORIZATION,
 	})
 }
 
