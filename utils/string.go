@@ -5,6 +5,7 @@ import (
 	"encoding/hex"
 	"math/rand"
 	"regexp"
+	"strings"
 )
 
 func IsPhone(phone string) bool {
@@ -62,4 +63,21 @@ func GeneralNickName() string {
 	pre := RandomString(6, 4)
 	end := RandomString(4, 1)
 	return pre + end
+}
+
+func GetTagsArray(tagsStr string,count int) []string {
+	tagArr := strings.Split(tagsStr,",")
+	var returnTags []string
+	tag := ""
+	for _,v := range tagArr {
+		if len(returnTags) == count {
+			break
+		}
+		if v == "" || v == tag {
+			continue
+		}
+		returnTags = append(returnTags,v)
+		tag = v
+	}
+	return returnTags
 }

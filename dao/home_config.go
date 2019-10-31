@@ -59,7 +59,7 @@ func GetHomeConfigRows(moduleType, limit int) []map[string]interface{} {
 		utils.CheckError(err)
 
 		if row.ConfigType == CONFIG_TYPE_CARTOON && row.CartoonId > 0 {
-			cartoon := FindCartoonById(row.CartoonId)
+			cartoon := GetCartoonById(row.CartoonId)
 			item["hover_image"] = cartoon.HoverImage
 			item["cartoon_name"] = cartoon.CartoonName
 			item["latest_chapter"] = cartoon.LatestChapter

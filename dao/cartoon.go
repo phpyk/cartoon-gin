@@ -56,7 +56,7 @@ type QueryObj struct {
 	UpdatedAt     utils.MyTime `json:"updated_at" time_format:"2006-01-02 15:04:05"`
 }
 
-func FindCartoonById(id int) (cartoon Cartoon) {
+func GetCartoonById(id int) (cartoon Cartoon) {
 	db, _ := DB.OpenCartoon()
 	db.Where("id = ?", id).First(&cartoon)
 	return cartoon
