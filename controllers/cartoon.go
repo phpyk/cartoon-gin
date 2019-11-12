@@ -2,6 +2,7 @@ package controllers
 
 import (
 	"encoding/json"
+	"log"
 	"strconv"
 
 	"cartoon-gin/dao"
@@ -22,3 +23,18 @@ func CartoonBaseInfoAction(c *gin.Context) {
 	outData["tags"] = utils.GetTagsArray(outData["tags"].(string),2)
 	cg.Success(outData)
 }
+
+func CartoonSearchAction(c *gin.Context) {
+	cg := utils.Gin{C: c,}
+	var searchRequest dao.SearchRequest
+	if err := c.Bind(&searchRequest); err != nil {
+		cg.Failed("bind request failed")
+	}
+	//
+	//err := cg.C.Request.ParseForm()
+	//utils.CheckError(err)
+	//catId := cg.C.Request.Form.Get("cat_id")
+	log.Printf("search request:%+v",searchRequest)
+}
+
+

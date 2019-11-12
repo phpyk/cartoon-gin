@@ -56,6 +56,14 @@ type QueryObj struct {
 	UpdatedAt     utils.MyTime `json:"updated_at" time_format:"2006-01-02 15:04:05"`
 }
 
+type SearchRequest struct {
+	IsFree int `form:"is_free" json:"is_free"`
+	IsEnd int `form:"is_end" json:"is_end"`
+	CatId int `form:"cat_id" json:"cat_id"`
+	Keywords string `form:"keywords" json:"keywords"`
+	SortType int `form:"sort_type" json:"sort_type"`
+}
+
 func GetCartoonById(id int) (cartoon Cartoon) {
 	db, _ := DB.OpenCartoon()
 	db.Where("id = ?", id).First(&cartoon)

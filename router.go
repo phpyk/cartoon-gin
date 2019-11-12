@@ -43,6 +43,7 @@ func initRouter() *gin.Engine {
 	cartoon := router.Group("/api/cartoon")
 	{
 		cartoon.GET("/base-info",CartoonBaseInfoAction)
+		cartoon.POST("/search",CartoonSearchAction)
 	}
 	return router
 }
