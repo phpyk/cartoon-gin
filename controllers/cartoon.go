@@ -30,7 +30,7 @@ func CartoonSearchAction(c *gin.Context) {
 	if err := c.Bind(&searchRequest); err != nil {
 		cg.Failed("bind request failed")
 	}
-	//
+
 	//err := cg.C.Request.ParseForm()
 	//utils.CheckError(err)
 	//catId := cg.C.Request.Form.Get("cat_id")

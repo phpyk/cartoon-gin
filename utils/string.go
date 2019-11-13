@@ -81,3 +81,7 @@ func GetTagsArray(tagsStr string,count int) []string {
 	}
 	return returnTags
 }
+
+func FilterSpecialChar(originalStr string) (newStr string) {
+	return ""
+}
