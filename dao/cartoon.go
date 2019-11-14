@@ -3,7 +3,6 @@ package dao
 import (
 	"cartoon-gin/DB"
 	"cartoon-gin/utils"
-	"fmt"
 	"strconv"
 
 	"encoding/json"
@@ -110,7 +109,7 @@ func FindCartoonsHoverImageForUpload(limit,lastMaxId int) []Cartoon {
 
 func SearchCartoonByConditions(request SearchRequest) []map[string]interface{} {
 	db,_ := DB.OpenCartoon()
-	columns := "id as cartoon_id, cartoon_name, hover_image, author, is_end, latest_chapter, free_type, external_url"
+	columns := "id, cartoon_name, hover_image, author, is_end, latest_chapter, tags, free_type, external_url, created_at, updated_at"
 	query := db.Debug().Table("cartoons").
 		Select(columns).
 		Where("verify_status = ?",CARTOON_VERIFY_STATUS_PASS).
@@ -133,9 +132,10 @@ func SearchCartoonByConditions(request SearchRequest) []map[string]interface{} {
 		query = query.Where("FIND_IN_SET("+strconv.Itoa(request.CatId)+",cat_ids)")
 	}
 	keywords := strings.Trim(request.Keywords," ")
-	fmt.Println("keywords: ",keywords)
+	keywords = utils.FilterSpecialChar(keywords)
 	if keywords != "" {
 		query = query.Where("cartoon_name like '%"+keywords+"%' or FIND_IN_SET('"+keywords+"',tags)")
+		//query = query.Where("cartoon_name like ?","%"+keywords+"%")
 	}
 	orderByColumn := "read_count"
 	if request.SortType == 2 {
@@ -160,8 +160,7 @@ func formatQueryObj(list []QueryObj) []map[string]interface{} {
 		utils.CheckError(err)
 		err = json.Unmarshal(jsonb, &item)
 
-		tagArr := strings.Split(row.Tags, ",")
-		item["tags"] = tagArr
+		item["tags"] = utils.GetTagsArray(row.Tags,2)
 		result = append(result, item)
 	}
 	return result

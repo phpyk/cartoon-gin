@@ -2,7 +2,6 @@ package controllers
 
 import (
 	"encoding/json"
-	"log"
 	"strconv"
 
 	"cartoon-gin/dao"
@@ -31,10 +30,10 @@ func CartoonSearchAction(c *gin.Context) {
 		cg.Failed("bind request failed")
 	}
 
-	//err := cg.C.Request.ParseForm()
-	//utils.CheckError(err)
-	//catId := cg.C.Request.Form.Get("cat_id")
-	log.Printf("search request:%+v",searchRequest)
+	var outData []map[string]interface{}
+	//todo 添加推荐逻辑
+	outData = dao.SearchCartoonByConditions(searchRequest)
+	cg.Success(outData)
 }
 
 

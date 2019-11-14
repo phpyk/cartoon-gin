@@ -82,6 +82,10 @@ func GetTagsArray(tagsStr string,count int) []string {
 	return returnTags
 }
 
-func FilterSpecialChar(originalStr string) (newStr string) {
-	return ""
+func FilterSpecialChar(str string) string {
+	chars := []byte(",.><=-+?/!@#$%^&*():;'{}[]_|！￥…（）『』「」【】：；“”‘’、《》？")
+	for _,c := range chars {
+		str = strings.Replace(str,string(c),"",-1)
+	}
+	return str
 }
