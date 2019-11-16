@@ -1,6 +1,8 @@
 package utils
 
-import "os"
+import (
+	"os"
+)
 
 func CreateDirIfNotExists(dir string) bool {
 	if !DirExists(dir) {

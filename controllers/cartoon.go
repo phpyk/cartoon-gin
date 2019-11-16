@@ -24,7 +24,10 @@ func CartoonBaseInfoAction(c *gin.Context) {
 }
 
 func CartoonSearchAction(c *gin.Context) {
+	ip := dao.IsVerifying(c)
 	cg := utils.Gin{C: c,}
+	cg.Success(ip)
+	return
 	var searchRequest dao.SearchRequest
 	if err := c.Bind(&searchRequest); err != nil {
 		cg.Failed("bind request failed")
