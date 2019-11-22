@@ -90,7 +90,7 @@ func GetMoreHomeConfigRows(moduleName string, page, pageSize int) []Result4Page 
 		Where("home_configs.deleted_at is null").
 		Where("home_configs.module_type = ?", moduleType).
 		Where("home_configs.config_type = ?", CONFIG_TYPE_CARTOON).
-		Where("cartoons.verify_status = ?", CARTOON_VERIFY_STATUS_PASS).
+		Where("cartoons.verify_status = ?", CartoonVerifyStatusPass).
 		Limit(pageSize).
 		Offset((page - 1) * pageSize).
 		Scan(&list)

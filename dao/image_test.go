@@ -7,6 +7,6 @@ import (
 
 func TestFindImageByChapterId(t *testing.T) {
 	cid := 231754
-	list := FindImagesByChapterId(cid)
+	list := GetImagesByChapterId(cid,0)
 	fmt.Printf("%+v", list)
 }

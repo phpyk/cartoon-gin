@@ -12,10 +12,13 @@ type Image struct {
 	IsDeleted int    `json:"is_deleted"`
 }
 
-func FindImagesByChapterId(chapterId int) []Image {
+func GetImagesByChapterId(chapterId,limit int) []Image {
 	db, _ := DB.OpenCartoon()
 	var list []Image
-	db.Table("cartoon_images").Where("chapter_id = ?", chapterId).Scan(&list)
+	query := db.Table("cartoon_images").Where("chapter_id = ?", chapterId).Order("sequence ASC")
+	if limit > 0 {
+		query = query.Limit(limit).Scan(&list)
+	}
 	return list
 }
 

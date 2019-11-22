@@ -14,5 +14,5 @@ type MyGormModel struct {
 
 type Paginate struct {
 	Page    int `gorm:"default:1" json:"page"`
-	PerPage int `gorm:"default:20" json:"per_page"`
+	PerPage int `gorm:"default:18" json:"per_page"`
 }

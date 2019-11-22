@@ -1,8 +1,18 @@
 package dao
 
-import "testing"
+import (
+	"fmt"
+	"testing"
+)
 
 func TestGetChapterRow(t *testing.T) {
-	id := "218702"
+	id := 218702
 	GetChapterRow(id)
+}
+
+func TestGetChapterList(t *testing.T) {
+	list := GetChapterList(4166,1,true, 2)
+	for _, row := range list {
+		fmt.Printf("%+v \n",row)
+	}
 }

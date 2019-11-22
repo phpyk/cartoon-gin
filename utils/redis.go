@@ -16,7 +16,7 @@ const (
 	RDS_KEY_SMS_CODE string = "vcode:{phone}"
 	//用户上次阅读章节
 	RDS_KEY_LAST_READ_CHAPTER = "lastread:u:{uid}:c:{cid}"
-
+	//Apple Pay用户，用来判断是否是审核人员
 	RDS_KEY_APPLE_PAY_USERS = "apple_pay_users"
 
 	RDS_KEY_USER_HOME_PAGE_RECOMMEND_DATA = "user:home:recomm:{uid}"
@@ -29,7 +29,6 @@ const (
 	RDS_KEY_USER_READ_HISTORIES = "user:read:histories:{uid}"
 	//用户推荐：漫画详情页
 	RDS_KEY_USER_CARTOON_DETAIL_RECOMMEND_DATA = "user:detail:recomm:{uid}:{c}"
-
 	//签到配置
 	RDS_KEY_SIGN_IN_CONFIGS = "sign:in:configs"
 )

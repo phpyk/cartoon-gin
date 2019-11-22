@@ -1,12 +1,10 @@
 package dao
 
 import (
-	"log"
 	"time"
 
 	"cartoon-gin/DB"
 	"cartoon-gin/utils"
-	"github.com/gin-gonic/gin"
 )
 
 type AppVersion struct {
@@ -24,14 +22,6 @@ type AppVersion struct {
 	ShowUpdateTips int `json:"show_update_tips"`
 }
 
-func IsVerifying(c *gin.Context) bool {
-	dtype := utils.GetDeviceType(c)
-	version := utils.GetAppVersion(c)
-	channel := utils.GetAndroidChannel(c)
-	row := GetAppVersionRow(version,dtype,channel)
-	log.Printf("row:%+v",row)
-	return row.IsVerifying == 1
-}
 
 func GetAppVersionRow(version,deviceType,channel string) (row AppVersion) {
 	db,err := DB.OpenCartoon()

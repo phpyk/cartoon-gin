@@ -4,10 +4,12 @@ import (
 	"cartoon-gin/DB"
 )
 
-const USER_TYPE_VISITOR = 0
-const USER_TYPE_NORMAL = 1
-const USER_TYPE_WILLING = 2
-const USER_TYPE_TARGET = 3
+const (
+	UserTypeVisitor = iota
+	UserTypeNormal
+	UserTypeWilling
+	UserTypeTarget
+)
 
 type User struct {
 	MyGormModel
@@ -55,10 +57,10 @@ func UserInviteCodeExists(code string) bool {
 	db.Table("users").Where("invite_code = ?", code).Count(&c)
 	return c > 0
 }
-func UserCreate(user User) bool {
+func UserCreate(user *User) bool {
 	db, _ := DB.OpenCartoon()
 	db.NewRecord(user)
-	db.Create(&user)
-	db.First(&user)
+	db.Create(user)
+	db.First(user)
 	return user.ID > 0
 }

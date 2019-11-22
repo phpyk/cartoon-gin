@@ -91,9 +91,9 @@ func VisitorLoginAction(c *gin.Context) {
 		}
 		user.InviteCode = code
 		user.NickName = utils.GeneralNickName()
-		user.UserType = dao.USER_TYPE_VISITOR
+		user.UserType = dao.UserTypeVisitor
 		user.UserDevice = device
-		dao.UserCreate(user)
+		dao.UserCreate(&user)
 	}
 	//resp, err := loginUserWithJWT(user, c)
 	resp, err := loginUserWithRedisAuth(user, c)

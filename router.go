@@ -44,6 +44,8 @@ func initRouter() *gin.Engine {
 	{
 		cartoon.GET("/base-info",CartoonBaseInfoAction)
 		cartoon.POST("/search",CartoonSearchAction)
+		cartoon.GET("/chapter-list",CartoonChapterListAction)
+		cartoon.GET("/reading",auth.ValidateRedisToken(),CartoonReadAction)
 	}
 	return router
 }

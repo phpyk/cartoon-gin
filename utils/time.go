@@ -30,3 +30,8 @@ func (this MyNullTime) MarshalJSON() ([]byte, error) {
 	var stamp = fmt.Sprintf("\"%s\"", time.Time(this.Time).Format("2006-01-02 15:04:05"))
 	return []byte(stamp), nil
 }
+
+func InNight() bool {
+	hour := time.Now().Hour()
+	return (hour >= 0 && hour < 6) || (hour >= 19)
+}
