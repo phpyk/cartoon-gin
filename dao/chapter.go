@@ -5,8 +5,6 @@ import (
 
 	"cartoon-gin/DB"
 	"cartoon-gin/utils"
-
-	"fmt"
 )
 
 type Chapter struct {
@@ -41,7 +39,6 @@ func GetChapterRow(chapterId int) Chapter {
 	db, _ := DB.OpenCartoon()
 	var row Chapter
 	db.Table("cartoon_chapters").Where("id = ?", chapterId).First(&row)
-	fmt.Printf("%+v",row)
 	return row
 }
 

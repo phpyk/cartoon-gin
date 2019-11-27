@@ -19,8 +19,8 @@ func initRouter() *gin.Engine {
 		authorize.GET("/login-dev",LoginDevAccount)
 		authorize.POST("/pwd-login", PasswordLoginAction)
 		authorize.POST("/visitor-login", VisitorLoginAction)
-		authorize.POST("/logout",auth.ValidateRedisToken(),LogoutAction)
-		authorize.GET("/me", auth.ValidateRedisToken(), CurrentUserAction)
+		authorize.POST("/logout",auth.ValidateJWTToken(),LogoutAction)
+		authorize.GET("/me", auth.ValidateJWTToken(), CurrentUserAction)
 	}
 	//首页tab
 	home := router.Group("/api/home")
@@ -45,7 +45,14 @@ func initRouter() *gin.Engine {
 		cartoon.GET("/base-info",CartoonBaseInfoAction)
 		cartoon.POST("/search",CartoonSearchAction)
 		cartoon.GET("/chapter-list",CartoonChapterListAction)
-		cartoon.GET("/reading",auth.ValidateRedisToken(),CartoonReadAction)
+		cartoon.GET("/reading",auth.ValidateJWTToken(),CartoonReadAction)
+		cartoon.POST("/collect",auth.ValidateJWTToken(),CartoonCollectAction)
+		cartoon.POST("/buy-chapter",auth.ValidateJWTToken(),CartoonBuyAction)
+	}
+	//书架tab
+	bookcase := router.Group("/api/user-bookcase")
+	{
+		bookcase.GET("/books",auth.ValidateJWTToken(),BookcaseTabsAction)
 	}
 	return router
 }

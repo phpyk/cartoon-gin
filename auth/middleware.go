@@ -108,7 +108,9 @@ func ValidateJWTToken() gin.HandlerFunc {
 			//claims interface 转为 mycliaims
 			myClaims := token.Claims.(*MyClaims)
 			log.Printf("claims: %+v \n", myClaims)
-			c.Set("uid", myClaims.UID)
+			user := dao.UserFindByID(myClaims.UID)
+			c.Set("user",&user)
+			//c.Set("uid", myClaims.UID)
 			c.Next()
 		}
 	}
@@ -135,7 +137,7 @@ func ValidateRedisToken() gin.HandlerFunc {
 				return
 			}
 			log.Printf("logined user: %+v \n", user)
-			c.Set("user",user)
+			c.Set("user",&user)
 			c.Next()
 		}
 	}

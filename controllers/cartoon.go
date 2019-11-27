@@ -2,7 +2,9 @@ package controllers
 
 import (
 	"encoding/json"
+	"log"
 	"strconv"
+	"time"
 
 	"cartoon-gin/dao"
 	"cartoon-gin/utils"
@@ -28,6 +30,7 @@ func CartoonSearchAction(c *gin.Context) {
 	var searchRequest dao.SearchRequest
 	if err := c.Bind(&searchRequest); err != nil {
 		cg.Failed("bind request failed")
+		return
 	}
 
 	var outData []map[string]interface{}
@@ -100,8 +103,89 @@ func CartoonReadAction(c *gin.Context) {
 	responseData["chapter_info"] = chapter
 
 	//DB记录阅读历史
-	dao.
+	dao.AddToReadingHistory(user.ID,cartoonId,chapterId)
 	//redis记录最近阅读章节id
+	saveLastReadChapterInfoToRedis(user.ID,cartoonId,chapterId,chapter.ChapterName)
 	cg.Success(responseData)
+}
+
+func CartoonCollectAction(c *gin.Context) {
+	cg := utils.Gin{C: c,}
+	cartoonId,err := strconv.Atoi(c.Request.FormValue("cartoon_id"))
+	utils.CheckError(err)
+	actType := c.Request.FormValue("act_type")
+	if actType == "" {
+		actType = "add"
+	}
+	if dao.CartoonExists(cartoonId) {
+		cg.Failed("漫画不存在")
+		return
+	}
+
+	user := CurrentUser(c)
+	//收藏
+	if actType == "add" {
+		if dao.CartoonHasBeenCollected(user.ID,cartoonId) || dao.CollectCartoon(user.ID,cartoonId) {
+			cg.Success(nil)
+			return
+		}else {
+			cg.Failed("加入收藏失败，请稍后再试~")
+			return
+		}
+	}else {
+		//取消收藏
+		dao.CancelCollectCartoon(user.ID, cartoonId)
+		cg.Success(nil)
+		return
+	}
+}
+
+func CartoonBuyAction(c *gin.Context) {
+	cg := utils.Gin{C: c,}
+	chapterId,err := strconv.Atoi(c.Request.FormValue("chapter_id"))
+	utils.CheckError(err)
+
+	user := CurrentUser(c)
+	if dao.HasBoughtChapter(user.ID, chapterId) {
+		cg.Failed("您已经购买过了，无需重复购买~")
+		return
+	}
+	chapter := dao.GetChapterRow(chapterId)
+	if chapter.ID == 0 {
+		cg.Failed("章节不存在")
+		return
+	}
+	if user.ValidCoin < uint(chapter.SalePrice) {
+		cg.Failed("可用金币余额不足")
+		return
+	}
+
+	err = dao.BuyChapter(user, &chapter)
+	if err != nil {
+		log.Printf("购买失败：user_id:%v,chapter_id:%v,error:%v",user.ID,chapterId,err.Error())
+		cg.Failed("购买失败，请稍后再试")
+		return
+	}
+
+	outData := make(map[string]interface{})
+	outData["user_valid_coin"] = int(user.ValidCoin)
+	cg.Success(outData)
+	return
+}
+
+func saveLastReadChapterInfoToRedis(userId, cartoonId, chapterId int,chapterName string) {
+	parms := make(map[string]string)
+	parms["uid"] = strconv.Itoa(userId)
+	parms["cid"] = strconv.Itoa(cartoonId)
+	key := utils.GetRedisKey(utils.RDS_KEY_USER_LAST_READ_CHAPTER_INFO,parms)
+
+	readingInfo := make(map[string]interface{})
+	readingInfo["last_read_chapter_name"] = chapterName
+	readingInfo["last_read_chapter_id"] = chapterId
+	readingInfo["last_read_time"] = time.Now().Unix()
+
+	if val,err := json.Marshal(readingInfo);err == nil {
+		utils.RedisSave(key,string(val))
+	}
 }
 

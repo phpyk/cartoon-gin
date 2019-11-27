@@ -32,8 +32,8 @@ func PasswordLoginAction(c *gin.Context) {
 		return
 	}
 
-	//resp, err := loginUserWithJWT(user, c)
-	resp, err := loginUserWithRedisAuth(user, c)
+	resp, err := loginUserWithJWT(user, c)
+	//resp, err := loginUserWithRedisAuth(user, c)
 	if err != nil {
 		cg.Error("login faild via:" + err.Error())
 		return
@@ -58,8 +58,8 @@ func LoginAction(c *gin.Context) {
 		cg.Failed("用户不存在")
 		return
 	}
-	//resp, err := loginUserWithJWT(user, c)
-	resp, err := loginUserWithRedisAuth(user, c)
+	resp, err := loginUserWithJWT(user, c)
+	//resp, err := loginUserWithRedisAuth(user, c)
 	if err != nil {
 		cg.Error("login faild via:" + err.Error())
 		return
@@ -95,8 +95,8 @@ func VisitorLoginAction(c *gin.Context) {
 		user.UserDevice = device
 		dao.UserCreate(&user)
 	}
-	//resp, err := loginUserWithJWT(user, c)
-	resp, err := loginUserWithRedisAuth(user, c)
+	resp, err := loginUserWithJWT(user, c)
+	//resp, err := loginUserWithRedisAuth(user, c)
 
 	if err != nil {
 		cg.Error("login faild via:" + err.Error())
@@ -112,9 +112,9 @@ func LoginDevAccount(c *gin.Context) {
 		cg.Failed("用户不存在")
 		return
 	}
-	//resp, err := loginUserWithJWT(user, c)
+	resp, err := loginUserWithJWT(user, c)
 
-	resp,err  := loginUserWithRedisAuth(user,c)
+	//resp,err  := loginUserWithRedisAuth(user,c)
 	if err != nil {
 		cg.Error("login faild via:" + err.Error())
 		return

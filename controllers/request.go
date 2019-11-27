@@ -9,7 +9,7 @@ import (
 func GeneralPageInfo(c *gin.Context) (page, pageSize int) {
 	page, err := strconv.Atoi(c.DefaultQuery("page", "1"))
 	utils.CheckError(err)
-	pageSize, err = strconv.Atoi(c.DefaultQuery("per_page", "20"))
+	pageSize, err = strconv.Atoi(c.DefaultQuery("per_page", "18"))
 	utils.CheckError(err)
 
 	return page, pageSize

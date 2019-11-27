@@ -27,6 +27,8 @@ const (
 	RDS_KEY_USER_BUY_CHAPTERS = "user:buy:chapters:{uid}"
 	//用户已读历史记录
 	RDS_KEY_USER_READ_HISTORIES = "user:read:histories:{uid}"
+	//用户上次阅读章节
+	RDS_KEY_USER_LAST_READ_CHAPTER_INFO = "lastread:u:{uid}:c:{cid}"
 	//用户推荐：漫画详情页
 	RDS_KEY_USER_CARTOON_DETAIL_RECOMMEND_DATA = "user:detail:recomm:{uid}:{c}"
 	//签到配置

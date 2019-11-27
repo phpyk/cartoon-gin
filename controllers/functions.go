@@ -9,11 +9,15 @@ import (
 	"github.com/gin-gonic/gin"
 )
 
-func CurrentUser(c *gin.Context) (user dao.User) {
+func CurrentUser(c *gin.Context) (user *dao.User) {
 	if value,exists := c.Get("user"); exists && value != nil {
-		user = value.(dao.User)
+		user = value.(*dao.User)
 	}
 	return
+}
+
+func FlushCurrentUser(c *gin.Context,user *dao.User) {
+	c.Set("user",user)
 }
 
 func ShowReted(c *gin.Context) bool {

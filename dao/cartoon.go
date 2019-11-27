@@ -24,6 +24,10 @@ const (
 	//完结状态
 	CartoonIsEndYes = 1
 	CartoonIsEndNo  = 0
+	//cartoon类型
+	CartoonTypeNormal = 1
+	CartoonTypeHM = 2
+	CartoonTypeExternal = 3
 )
 
 type Cartoon struct {
@@ -71,7 +75,7 @@ type SearchRequest struct {
 	CatId    int    `form:"cat_id" json:"cat_id"`
 	Keywords string `form:"keywords" json:"keywords"`
 	SortType int    `form:"sort_type" json:"sort_type"`
-	PageSize int    `form:"page_size" json:"page_size"`
+	PerPage  int    `form:"page_size" json:"page_size"`
 	Page     int    `form:"page" json:"page"`
 }
 
@@ -148,13 +152,13 @@ func SearchCartoonByConditions(request SearchRequest) []map[string]interface{} {
 	if request.SortType == 2 {
 		orderByColumn = "updated_at"
 	}
-	if request.PageSize == 0 {
-		request.PageSize = 18
+	if request.PerPage == 0 {
+		request.PerPage = 18
 	}
 	var list []QueryCartoons
 	query.Order(orderByColumn + " desc").
-		Limit(request.PageSize).
-		Offset((request.Page - 1) * request.PageSize).
+		Limit(request.PerPage).
+		Offset((request.Page - 1) * request.PerPage).
 		Scan(&list)
 	return formatQueryCartoons(list)
 }
