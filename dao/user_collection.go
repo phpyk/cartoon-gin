@@ -20,11 +20,10 @@ type BookCaseSearchRequest struct {
 	IsAndroid bool `json:"is_android"`
 	IsVerifying bool `json:"is_verifying"`
 	ShowRated bool `json:"show_rated"`
-	GetTotalCount bool `json:"get_total_count"`
 }
 
 func GetUserCollections(searchRequest BookCaseSearchRequest) []map[string]interface{} {
-	query := generalQuery(searchRequest)
+	query := generalUserCollectionQuery(searchRequest)
 
 	var list []QueryCartoons
 	query.Limit(searchRequest.PerPage).
@@ -34,8 +33,7 @@ func GetUserCollections(searchRequest BookCaseSearchRequest) []map[string]interf
 }
 
 func GetUserCollectionCount(searchRequest BookCaseSearchRequest) int {
-	searchRequest.GetTotalCount = true
-	query := generalQuery(searchRequest)
+	query := generalUserCollectionQuery(searchRequest)
 	var totalCount int
 	query.Count(&totalCount)
 	return totalCount
@@ -70,7 +68,7 @@ func CancelCollectCartoon(userId, cartoonId int) bool {
 	return false
 }
 
-func generalQuery(searchRequest BookCaseSearchRequest) *gorm.DB {
+func generalUserCollectionQuery(searchRequest BookCaseSearchRequest) *gorm.DB {
 	db, _ := DB.OpenCartoon()
 	columns := "c.*"
 	query := db.Debug().Table("user_collections AS a").

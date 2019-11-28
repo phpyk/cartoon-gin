@@ -67,6 +67,8 @@ type QueryCartoons struct {
 	FreeType      int          `json:"free_type"`
 	CreatedAt     utils.MyTime `json:"created_at" time_format:"2006-01-02 15:04:05"`
 	UpdatedAt     utils.MyTime `json:"updated_at" time_format:"2006-01-02 15:04:05"`
+	LastReadChapterId int `json:"last_read_chapter_id"`
+	LastReadTime int `json:"last_read_time"`
 }
 
 type SearchRequest struct {

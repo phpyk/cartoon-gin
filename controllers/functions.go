@@ -11,7 +11,11 @@ import (
 
 func CurrentUser(c *gin.Context) (user *dao.User) {
 	if value,exists := c.Get("user"); exists && value != nil {
-		user = value.(*dao.User)
+		user,ok := value.(*dao.User)
+		if !ok {
+			panic("context user type error")
+		}
+		return user
 	}
 	return
 }
@@ -24,16 +28,22 @@ func ShowReted(c *gin.Context) bool {
 	if IsUSAIp(c) {
 		return false
 	}
-	return false
+	row := getAppVersionRow(c)
+	return row.ShowRated == 1
 }
 
 func IsVerifying(c *gin.Context) bool {
+	row := getAppVersionRow(c)
+	log.Printf("version row:%+v\n",row)
+	return row.IsVerifying == 1
+}
+
+func getAppVersionRow(c *gin.Context) dao.AppVersion {
 	dtype := GetDeviceType(c)
 	version := GetAppVersion(c)
 	channel := GetAndroidChannel(c)
 	row := dao.GetAppVersionRow(version,dtype,channel)
-	log.Printf("version row:%+v\n",row)
-	return row.IsVerifying == 1
+	return row
 }
 
 func IsUSAIp(c *gin.Context) bool {

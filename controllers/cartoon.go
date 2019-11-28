@@ -2,6 +2,7 @@ package controllers
 
 import (
 	"encoding/json"
+	"fmt"
 	"log"
 	"strconv"
 	"time"
@@ -21,7 +22,7 @@ func CartoonBaseInfoAction(c *gin.Context) {
 	var outData map[string]interface{}
 	err = json.Unmarshal([]byte(jsonData),&outData)
 	utils.CheckError(err)
-	outData["tags"] = utils.GetTagsArray(outData["tags"].(string),2)
+	outData["tags"] = utils.GetTagsArray(fmt.Sprint(outData["tags"]),2)
 	cg.Success(outData)
 }
 

@@ -135,6 +135,7 @@ func LogoutAction(c *gin.Context) {
 	_,err := sts.Result()
 	if err != nil {
 		cg.Failed("退出失败")
+		return
 	}
 	cg.Success(nil)
 }
@@ -142,14 +143,12 @@ func LogoutAction(c *gin.Context) {
 func CurrentUserAction(c *gin.Context) {
 	cg := utils.Gin{C: c}
 	//interface 转 uint类型
-	//cg.C.Keys["uid"].(uint)
 	user := cg.C.Keys["user"]
 	if user == nil {
 		cg.Failed("用户未登陆")
 		return
 	}
-	//me := dao.UserFindByID(cg.C.Keys["uid"].(uint))
-	me := cg.C.Keys["user"].(dao.User)
+	me := CurrentUser(c)
 	cg.Success(me)
 }
 

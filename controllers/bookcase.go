@@ -28,20 +28,23 @@ func BookcaseTabsAction(c *gin.Context) {
 	fmt.Printf("%+v\n",searchRequest)
 
 	responseData := make(map[string]interface{})
+	var totalCount = 0
 	//我的收藏
 	if searchRequest.Tab == "collect" {
 		responseData["data"] = dao.GetUserCollections(searchRequest)
-		searchRequest.GetTotalCount = true
-		totalCount := dao.GetUserCollectionCount(searchRequest)
-		responseData = utils.AppendPaginateData(responseData,totalCount,searchRequest.Page,searchRequest.PerPage,c.Request.RequestURI)
+		totalCount = dao.GetUserCollectionCount(searchRequest)
 	}
 	//阅读历史
 	if searchRequest.Tab == "history" {
-
+		responseData["data"] = dao.GetUserReadingHistories(searchRequest)
+		totalCount = dao.GetUserReadingHistoryCount(searchRequest)
 	}
 	//已购买
 	if searchRequest.Tab == "pay" {
-
+		responseData["data"] = dao.GetUserBoughtCartoons(searchRequest)
+		totalCount = dao.GetUserBoughtCartoonsCount(searchRequest)
 	}
+	responseData = utils.AppendPaginateData(responseData,totalCount,searchRequest.Page,searchRequest.PerPage,c.Request.RequestURI)
+
 	cg.Success(responseData)
 }

@@ -4,6 +4,7 @@ import (
 	"fmt"
 
 	"cartoon-gin/DB"
+	"github.com/jinzhu/gorm"
 )
 
 type UserBoughtCartoon struct {
@@ -50,4 +51,35 @@ func BuyChapter(user *User,chapter *Chapter) error {
 		return err
 	}
 	return tx.Commit().Error
+}
+
+func GetUserBoughtCartoons(searchRequest BookCaseSearchRequest) []map[string]interface{} {
+	query := generalUserBoughtCartoonQuery(searchRequest)
+	var list []QueryCartoons
+	query.Limit(searchRequest.PerPage).
+		Offset((searchRequest.Page - 1) * searchRequest.PerPage).
+		Scan(&list)
+	return formatQueryCartoons(list)
+}
+
+func GetUserBoughtCartoonsCount(searchRequest BookCaseSearchRequest) int {
+	query := generalUserBoughtCartoonQuery(searchRequest)
+	var count int
+	query.Count(&count)
+	return count
+}
+
+func generalUserBoughtCartoonQuery(searchRequest BookCaseSearchRequest) *gorm.DB {
+	db,_ := DB.OpenCartoon()
+	columns := "c.*"
+	query := db.Debug().Select(columns).Table("user_bought_cartoons AS b").
+		Joins("INNER JOIN cartoons AS c ON b.cartoon_id = c.id").
+		Where("c.is_on_sale = ?",CartoonIsOnSale).
+		Where("c.verify_status = ?",CartoonVerifyStatusPass).
+		Where("b.user_id = ?",searchRequest.UserId)
+	if !searchRequest.ShowRated {
+		query = query.Where("c.is_rated = ?", 0)
+	}
+	query = query.Group("b.user_id, b.cartoon_id")
+	return query
 }

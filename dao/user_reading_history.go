@@ -4,6 +4,7 @@ import (
 	"time"
 
 	"cartoon-gin/DB"
+	"github.com/jinzhu/gorm"
 )
 
 type UserReadingHistory struct {
@@ -22,4 +23,39 @@ func AddToReadingHistory(userId,CartoonId,ChapterId int) bool {
 		return true
 	}
 	return false
+}
+
+func GetUserReadingHistories(searchRequest BookCaseSearchRequest) []map[string]interface{} {
+	query := generalUserReadingHistoryQuery(searchRequest)
+	var list []QueryCartoons
+	query.Order("h.last_read_time DESC").
+		Limit(searchRequest.PerPage).
+		Offset((searchRequest.Page - 1) * searchRequest.PerPage).
+		Scan(&list)
+	return formatQueryCartoons(list)
+}
+
+func GetUserReadingHistoryCount(searchRequest BookCaseSearchRequest) int {
+	query := generalUserReadingHistoryQuery(searchRequest)
+	var count int
+	query.Count(&count)
+	return count
+}
+
+func generalUserReadingHistoryQuery(searchRequest BookCaseSearchRequest) *gorm.DB {
+	db,_ := DB.OpenCartoon()
+	columns := "h.cartoon_id,c.*, max(h.chapter_id) as last_read_chapter_id, max(h.last_read_time) as last_read_time"
+	query := db.Debug().Table("user_reading_historys AS h").
+		Select(columns).
+		Joins("INNER JOIN cartoons AS c ON h.cartoon_id = c.id").
+		Where("c.is_on_sale = ?", CartoonIsOnSale).
+		Where("c.verify_status = ?",CartoonVerifyStatusPass).
+		Where("c.cartoon_type != ?",CartoonTypeExternal).
+		Where("c.deleted_at is null").
+		Where("h.user_id = ?",searchRequest.UserId)
+	if !searchRequest.ShowRated {
+		query = query.Where("c.is_rated = ?", 0)
+	}
+	query = query.Group("h.cartoon_id")
+	return query
 }

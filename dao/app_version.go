@@ -26,7 +26,7 @@ type AppVersion struct {
 func GetAppVersionRow(version,deviceType,channel string) (row AppVersion) {
 	db,err := DB.OpenCartoon()
 	utils.CheckError(err)
-	query := db.Debug().Table("app_versions").Where("device_type = ?",deviceType).Where("version = ?",version)
+	query := db.Table("app_versions").Where("device_type = ?",deviceType).Where("version = ?",version)
 	if channel != "" {
 		query = query.Where("channel = ?",channel)
 	}
