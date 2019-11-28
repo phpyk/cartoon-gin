@@ -1,7 +1,6 @@
 package utils
 
 import (
-	"fmt"
 	"math"
 )
 
@@ -19,7 +18,6 @@ func AppendPaginateData(result map[string]interface{}, count, currentPage, perPa
 func calcuLastPage(dataCount, perPage int) int {
 	var pcount float64
 	pcount = float64(dataCount)/float64(perPage)
-	fmt.Println(pcount)
 	fv := math.Ceil(pcount)
 	return int(math.Ceil(fv))
 }

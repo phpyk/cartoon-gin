@@ -76,7 +76,10 @@ func generalUserBoughtCartoonQuery(searchRequest BookCaseSearchRequest) *gorm.DB
 		Joins("INNER JOIN cartoons AS c ON b.cartoon_id = c.id").
 		Where("c.is_on_sale = ?",CartoonIsOnSale).
 		Where("c.verify_status = ?",CartoonVerifyStatusPass).
-		Where("b.user_id = ?",searchRequest.UserId)
+		Where("b.user_id = ?",searchRequest.UserId).
+		Where("c.deleted_at IS NULL").
+		Where("b.deleted_at IS NULL")
+
 	if !searchRequest.ShowRated {
 		query = query.Where("c.is_rated = ?", 0)
 	}

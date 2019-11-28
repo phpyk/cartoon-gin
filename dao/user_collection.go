@@ -1,6 +1,8 @@
 package dao
 
 import (
+	"time"
+
 	"cartoon-gin/DB"
 	"github.com/jinzhu/gorm"
 )
@@ -28,7 +30,7 @@ func GetUserCollections(searchRequest BookCaseSearchRequest) []map[string]interf
 	var list []QueryCartoons
 	query.Limit(searchRequest.PerPage).
 		Offset((searchRequest.Page - 1) * searchRequest.PerPage).
-		Scan(&list)
+		Find(&list)
 	return formatQueryCartoons(list)
 }
 
@@ -68,6 +70,12 @@ func CancelCollectCartoon(userId, cartoonId int) bool {
 	return false
 }
 
+func DeleteUserCollection(UserId int, cartoonIdSlice []int) bool {
+	db,_ := DB.OpenCartoon()
+	db.Table("user_collections").Where("user_id = ?",UserId).Where("cartoon_id in (?)",cartoonIdSlice).Update("deleted_at",time.Now().Format("2006-01-02 15:04:05"))
+	return true
+}
+
 func generalUserCollectionQuery(searchRequest BookCaseSearchRequest) *gorm.DB {
 	db, _ := DB.OpenCartoon()
 	columns := "c.*"
@@ -77,7 +85,8 @@ func generalUserCollectionQuery(searchRequest BookCaseSearchRequest) *gorm.DB {
 		Where("c.is_on_sale = ?", CartoonIsOnSale).
 		Where("c.verify_status = ?", CartoonVerifyStatusPass).
 		Where("a.user_id = ?", searchRequest.UserId).
-		Where("c.deleted_at IS NULL")
+		Where("c.deleted_at IS NULL").
+		Where("a.deleted_at IS NULL")
 	if searchRequest.IsAndroid && searchRequest.IsVerifying {
 		query  = query.Where("c.cartoon_type = ?",CartoonTypeExternal)
 	}else {

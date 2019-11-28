@@ -42,6 +42,12 @@ func GetUserReadingHistoryCount(searchRequest BookCaseSearchRequest) int {
 	return count
 }
 
+func DeleteUserReadingHistory(UserId int, cartoonIdSlice []int) bool {
+	db,_ := DB.OpenCartoon()
+	db.Table("user_reading_historys").Where("user_id = ?",UserId).Where("cartoon_id in (?)",cartoonIdSlice).Update("deleted_at",time.Now().Format("2006-01-02 15:04:05"))
+	return true
+}
+
 func generalUserReadingHistoryQuery(searchRequest BookCaseSearchRequest) *gorm.DB {
 	db,_ := DB.OpenCartoon()
 	columns := "h.cartoon_id,c.*, max(h.chapter_id) as last_read_chapter_id, max(h.last_read_time) as last_read_time"
@@ -51,8 +57,10 @@ func generalUserReadingHistoryQuery(searchRequest BookCaseSearchRequest) *gorm.D
 		Where("c.is_on_sale = ?", CartoonIsOnSale).
 		Where("c.verify_status = ?",CartoonVerifyStatusPass).
 		Where("c.cartoon_type != ?",CartoonTypeExternal).
+		Where("h.user_id = ?",searchRequest.UserId).
 		Where("c.deleted_at is null").
-		Where("h.user_id = ?",searchRequest.UserId)
+		Where("h.deleted_at IS NULL")
+
 	if !searchRequest.ShowRated {
 		query = query.Where("c.is_rated = ?", 0)
 	}

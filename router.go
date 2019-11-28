@@ -53,6 +53,7 @@ func initRouter() *gin.Engine {
 	bookcase := router.Group("/api/user-bookcase")
 	{
 		bookcase.GET("/books",auth.ValidateJWTToken(),BookcaseTabsAction)
+		bookcase.POST("/delete",auth.ValidateJWTToken(),BookcaseDeleteAction)
 	}
 	return router
 }

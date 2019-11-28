@@ -2,6 +2,8 @@ package controllers
 
 import (
 	"fmt"
+	"strconv"
+	"strings"
 
 	"cartoon-gin/dao"
 	"cartoon-gin/utils"
@@ -47,4 +49,35 @@ func BookcaseTabsAction(c *gin.Context) {
 	responseData = utils.AppendPaginateData(responseData,totalCount,searchRequest.Page,searchRequest.PerPage,c.Request.RequestURI)
 
 	cg.Success(responseData)
+}
+
+func BookcaseDeleteAction(c *gin.Context) {
+	cg := utils.Gin{C: c,}
+	cartoonIdStr := c.Request.FormValue("cartoon_id_str")
+	tab := c.Request.FormValue("tab")
+
+	if cartoonIdStr == "" || tab == "" {
+		cg.Failed("params required")
+		return
+	}
+	cartoonIdSlice := strings.Split(cartoonIdStr,",")
+	var deletedIdSlice []int
+	for _, stringId := range cartoonIdSlice {
+		if stringId == "" {
+			continue
+		}
+		intId,err := strconv.Atoi(stringId)
+		if err != nil || intId == 0 {
+			continue
+		}
+		deletedIdSlice = append(deletedIdSlice,intId)
+	}
+
+	user := CurrentUser(c)
+	if tab == "collect" {
+		dao.DeleteUserCollection(user.ID,deletedIdSlice)
+	}else if tab == "history" {
+		dao.DeleteUserReadingHistory(user.ID,deletedIdSlice)
+	}
+	cg.Success(nil)
 }
