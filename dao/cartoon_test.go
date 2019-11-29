@@ -17,3 +17,9 @@ func TestSearchCartoonByConditions(t *testing.T) {
 	result := SearchCartoonByConditions(request)
 	fmt.Printf("%+v",result)
 }
+
+func TestGetRecommendFromCache(t *testing.T) {
+	userId := 133
+	list := GetRecommendFromCache(userId)
+	fmt.Printf("%v",list)
+}

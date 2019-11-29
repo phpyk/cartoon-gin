@@ -30,7 +30,7 @@ const (
 	//用户上次阅读章节
 	RDS_KEY_USER_LAST_READ_CHAPTER_INFO = "lastread:u:{uid}:c:{cid}"
 	//用户推荐：漫画详情页
-	RDS_KEY_USER_CARTOON_DETAIL_RECOMMEND_DATA = "user:detail:recomm:{uid}:{c}"
+	RDS_KEY_USER_CARTOON_RECOMMEND_DATA = "user:recomm:{uid}"
 	//签到配置
 	RDS_KEY_SIGN_IN_CONFIGS = "sign:in:configs"
 )

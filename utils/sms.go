@@ -29,11 +29,13 @@ type ClientError struct {
 	e       error
 }
 
+var templateId int = 481874
+
 func NewSmsClient() SmsClient {
 	return SmsClient{
-		AccountSid:   "8aaf07086812057f01682687c85208e2",
-		AccountToken: "ec44618e428146f79e4a7f203a759caa",
-		AppId:        "8aaf07086a25761e016a2e38513d0552",
+		AccountSid:   "8aaf07086dcdca52016dec972d041119",
+		AccountToken: "9c6076b15e004da9a429cb132926f447",
+		AppId:        "8a216da86df13579016df7c686b805b9",
 		ServerIp:     "app.cloopen.com",
 		ServerPort:   "8883",
 		Version:      "2013-12-26",
@@ -65,7 +67,7 @@ func (c *SmsClient) accountCheck() error {
 	return nil
 }
 
-func (c *SmsClient) SendTemplateSMS(to string, data []string, templateId int) (result map[string]interface{}, err error) {
+func (c *SmsClient) SendTemplateSMS(to string, data []string) (result map[string]interface{}, err error) {
 	err = c.accountCheck()
 	if err != nil {
 		return nil, err

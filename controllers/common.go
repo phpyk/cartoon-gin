@@ -46,8 +46,7 @@ func SendSMSVerifyCodeAction(c *gin.Context) {
 
 	randomStr := utils.RandomString(4, 1)
 	smsClient := utils.NewSmsClient()
-	templateId := 424738
-	sendResult,err := smsClient.SendTemplateSMS(phone,[]string{randomStr,"5分钟"},templateId)
+	sendResult,err := smsClient.SendTemplateSMS(phone,[]string{randomStr,"5分钟"})
 	utils.CheckError(err)
 
 	if err == nil && sendResult["statusCode"] == "000000" {

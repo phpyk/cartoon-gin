@@ -37,7 +37,7 @@ func GetRecommend(c *gin.Context)  {
 	ratedCount := counter.GetRatedCount(totalCount)
 	fmt.Println("rated_count: ",ratedCount)
 
-	list := dao.GetRecommend(totalCount,ratedCount)
+	list := dao.GetRecommend(user.ID,totalCount,ratedCount)
 	responseData["data"] = list
 	cg.Success(responseData)
 }

@@ -1,9 +1,12 @@
 package dao
 
 import (
+	"math/rand"
+	"strconv"
+	"time"
+
 	"cartoon-gin/DB"
 	"cartoon-gin/utils"
-	"strconv"
 
 	"encoding/json"
 	"strings"
@@ -66,8 +69,8 @@ type QueryCartoons struct {
 	KeywordsIds   string       `json:"keywords_ids"`
 	FreeType      int          `json:"free_type"`
 	Depiction      string `json:"depiction"`
-	CreatedAt     utils.MyTime `json:"created_at" time_format:"2006-01-02 15:04:05"`
-	UpdatedAt     utils.MyTime `json:"updated_at" time_format:"2006-01-02 15:04:05"`
+	CreatedAt     utils.MyTime `json:"-" time_format:"2006-01-02 15:04:05"`
+	UpdatedAt     utils.MyTime `json:"-" time_format:"2006-01-02 15:04:05"`
 	LastReadChapterId int `json:"last_read_chapter_id"`
 	LastReadTime int `json:"last_read_time"`
 }
@@ -166,7 +169,7 @@ func SearchCartoonByConditions(request SearchRequest) []map[string]interface{} {
 	return formatQueryCartoons(list)
 }
 
-func GetRecommend(totalCount,ratedCount int) []map[string]interface{} {
+func GetRecommend(userId, totalCount, ratedCount int) []map[string]interface{} {
 	var list []QueryCartoons
 	if totalCount == 1 {
 		var forRated bool = false
@@ -175,22 +178,35 @@ func GetRecommend(totalCount,ratedCount int) []map[string]interface{} {
 		}
 		list = GetCartoonsInRandom(totalCount,forRated)
 	}else {
-		ratedList := GetCartoonsInRandom(ratedCount,true)
-		normalCount := totalCount - ratedCount
-		normalList := GetCartoonsInRandom(normalCount,false)
+		list = GetRecommendFromCache(userId)
+		if len(list) == 0 {
+			ratedList := GetCartoonsInRandom(ratedCount,true)
+			normalCount := totalCount - ratedCount
+			normalList := GetCartoonsInRandom(normalCount,false)
 
-		list = append(list,ratedList...)
-		list = append(list,normalList...)
+			list = append(list,ratedList...)
+			list = append(list,normalList...)
+			// shuffle slice`s order
+			rand.Seed(time.Now().UnixNano())
+			rand.Shuffle(len(list), func(i, j int) {
+				list[i],list[j] = list[j],list[i]
+			})
+			//save to redis
+			saveRecommendToCache(userId,list)
+		}
 	}
 	return formatQueryCartoons(list)
 }
 
 func GetCartoonsInRandom(count int, isRated bool) []QueryCartoons {
+	var list []QueryCartoons
+	if count <= 0 {
+		return list
+	}
 	var cartoonIsRated int = 0
 	if isRated {
 		cartoonIsRated = 1
 	}
-	var list []QueryCartoons
 
 	db,_ := DB.OpenCartoon()
 
@@ -218,4 +234,35 @@ func formatQueryCartoons(list []QueryCartoons) []map[string]interface{} {
 		result = append(result, item)
 	}
 	return result
+}
+
+
+func GetRecommendFromCache(userId int) []QueryCartoons {
+	var data []QueryCartoons
+
+	params := make(map[string]string)
+	params["uid"] = strconv.Itoa(userId)
+	key := utils.GetRedisKey(utils.RDS_KEY_USER_CARTOON_RECOMMEND_DATA,params)
+	client := utils.NewRedisClient()
+	jsonResult,_ := client.Get(key).Result()
+
+	if jsonResult == "" {
+		return data
+	}
+
+	err := json.Unmarshal([]byte(jsonResult),&data)
+	utils.CheckError(err)
+	return data
+}
+
+func saveRecommendToCache(userId int, list []QueryCartoons) {
+	params := make(map[string]string)
+	params["uid"] = strconv.Itoa(userId)
+	key := utils.GetRedisKey(utils.RDS_KEY_USER_CARTOON_RECOMMEND_DATA,params)
+	client := utils.NewRedisClient()
+
+	data,err := json.Marshal(list)
+
+	utils.CheckError(err)
+	client.Set(key,data,time.Minute*5)
 }
