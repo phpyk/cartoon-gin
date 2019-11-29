@@ -65,6 +65,7 @@ type QueryCartoons struct {
 	LatestChapter int          `json:"latest_chapter"`
 	KeywordsIds   string       `json:"keywords_ids"`
 	FreeType      int          `json:"free_type"`
+	Depiction      string `json:"depiction"`
 	CreatedAt     utils.MyTime `json:"created_at" time_format:"2006-01-02 15:04:05"`
 	UpdatedAt     utils.MyTime `json:"updated_at" time_format:"2006-01-02 15:04:05"`
 	LastReadChapterId int `json:"last_read_chapter_id"`
@@ -163,6 +164,46 @@ func SearchCartoonByConditions(request SearchRequest) []map[string]interface{} {
 		Offset((request.Page - 1) * request.PerPage).
 		Scan(&list)
 	return formatQueryCartoons(list)
+}
+
+func GetRecommend(totalCount,ratedCount int) []map[string]interface{} {
+	var list []QueryCartoons
+	if totalCount == 1 {
+		var forRated bool = false
+		if ratedCount > 0 {
+			forRated = true
+		}
+		list = GetCartoonsInRandom(totalCount,forRated)
+	}else {
+		ratedList := GetCartoonsInRandom(ratedCount,true)
+		normalCount := totalCount - ratedCount
+		normalList := GetCartoonsInRandom(normalCount,false)
+
+		list = append(list,ratedList...)
+		list = append(list,normalList...)
+	}
+	return formatQueryCartoons(list)
+}
+
+func GetCartoonsInRandom(count int, isRated bool) []QueryCartoons {
+	var cartoonIsRated int = 0
+	if isRated {
+		cartoonIsRated = 1
+	}
+	var list []QueryCartoons
+
+	db,_ := DB.OpenCartoon()
+
+	columns := "id, cartoon_name, hover_image, author, is_end, latest_chapter, tags, depiction, free_type, external_url, created_at, updated_at"
+	db.Debug().Table("cartoons as c").Select(columns).
+		Where("c.verify_status = ?", CartoonVerifyStatusPass).
+		Where("c.is_on_sale = ?", CartoonIsOnSale).
+		Where("c.cartoon_type != ?",CartoonTypeExternal).
+		Where("c.is_rated = ?",cartoonIsRated).
+		Order("RAND()").
+		Limit(count).
+		Scan(&list)
+	return list
 }
 
 func formatQueryCartoons(list []QueryCartoons) []map[string]interface{} {

@@ -55,5 +55,8 @@ func initRouter() *gin.Engine {
 		bookcase.GET("/books",auth.ValidateJWTToken(),BookcaseTabsAction)
 		bookcase.POST("/delete",auth.ValidateJWTToken(),BookcaseDeleteAction)
 	}
+	//推荐
+	router.GET("/api/recommend/get",auth.ValidateJWTToken(),GetRecommend)
+
 	return router
 }
