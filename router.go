@@ -15,12 +15,12 @@ func initRouter() *gin.Engine {
 	//登录、退出、游客登录
 	authorize := router.Group("/api/auth")
 	{
-		authorize.POST("/login", LoginAction)
-		authorize.GET("/login-dev",LoginDevAccount)
-		authorize.POST("/pwd-login", PasswordLoginAction)
-		authorize.POST("/visitor-login", VisitorLoginAction)
-		authorize.POST("/logout",auth.ValidateJWTToken(),LogoutAction)
-		authorize.GET("/me", auth.ValidateJWTToken(), CurrentUserAction)
+		authorize.POST("login", LoginAction)
+		authorize.GET("login-dev",LoginDevAccount)
+		authorize.POST("pwd-login", PasswordLoginAction)
+		authorize.POST("visitor-login", VisitorLoginAction)
+		authorize.POST("logout",auth.ValidateJWTToken(),LogoutAction)
+		authorize.GET("me", auth.ValidateJWTToken(), CurrentUserAction)
 	}
 	//首页tab
 	home := router.Group("/api/home")
@@ -33,30 +33,46 @@ func initRouter() *gin.Engine {
 	//通用功能（图片验证码、手机验证码）
 	common := router.Group("/api/common")
 	{
-		common.POST("/captcha",CaptchaAction)
-		common.POST("/captcha-check",CaptchaCheckAction)
-		common.POST("/verify-code", SendSMSVerifyCodeAction)
+		common.POST("captcha",CaptchaAction)
+		common.POST("captcha-check",CaptchaCheckAction)
+		common.POST("verify-code", SendSMSVerifyCodeAction)
 	}
 	//分类tab
 	router.GET("/api/cat/labels",CategoryLabelsAction)
 	//漫画相关接口
-	cartoon := router.Group("/api/cartoon")
+	cartoon := router.Group("/api/cartoon/")
 	{
-		cartoon.GET("/base-info",CartoonBaseInfoAction)
-		cartoon.POST("/search",CartoonSearchAction)
-		cartoon.GET("/chapter-list",CartoonChapterListAction)
-		cartoon.GET("/reading",auth.ValidateJWTToken(),CartoonReadAction)
-		cartoon.POST("/collect",auth.ValidateJWTToken(),CartoonCollectAction)
-		cartoon.POST("/buy-chapter",auth.ValidateJWTToken(),CartoonBuyAction)
+		cartoon.GET("base-info",CartoonBaseInfoAction)
+		cartoon.POST("search",CartoonSearchAction)
+		cartoon.GET("chapter-list",CartoonChapterListAction)
+		cartoon.GET("reading",auth.ValidateJWTToken(),CartoonReadAction)
+		cartoon.POST("collect",auth.ValidateJWTToken(),CartoonCollectAction)
+		cartoon.POST("buy-chapter",auth.ValidateJWTToken(),CartoonBuyAction)
 	}
 	//书架tab
-	bookcase := router.Group("/api/user-bookcase")
+	bookcase := router.Group("/api/user-bookcase/").Use(auth.ValidateJWTToken())
 	{
-		bookcase.GET("/books",auth.ValidateJWTToken(),BookcaseTabsAction)
-		bookcase.POST("/delete",auth.ValidateJWTToken(),BookcaseDeleteAction)
+		bookcase.GET("books",BookcaseTabsAction)
+		bookcase.POST("delete",BookcaseDeleteAction)
 	}
 	//推荐
 	router.GET("/api/recommend/get",auth.ValidateJWTToken(),GetRecommend)
-
+	//修改资料
+	profile := router.Group("/api/profile/").Use(auth.ValidateJWTToken())
+	{
+		profile.GET("base-info",ProfileBaseInfoAction)
+		profile.POST("update",ProfileUpdateAction)
+		profile.POST("bind-phone",UserBindPhoneAction)
+		profile.POST("change-phone-verify",UserChangePhoneVerify)
+		profile.POST("change-phone-submit",UserChangePhoneSubmit)
+	}
+	//获取App-config
+	appConfig := router.Group("/api/config/")
+	{
+		appConfig.GET("reports",ConfigReportAction)
+		appConfig.GET("vip-config",ConfigVipAction)
+		appConfig.GET("coin-config",ConfigCoinAction)
+		appConfig.GET("pay-channels",ConfigPayChannelsAction)
+	}
 	return router
 }

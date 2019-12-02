@@ -1,6 +1,7 @@
 package controllers
 
 import (
+	"strings"
 	"time"
 
 	"cartoon-gin/utils"
@@ -18,8 +19,8 @@ func CaptchaAction(c *gin.Context) {
 
 func CaptchaCheckAction(c *gin.Context) {
 	cg := utils.Gin{C: c,}
-	key := c.Request.FormValue("key")
-	code := c.Request.FormValue("code")
+	key := utils.FilterSpecialChar(strings.Trim(c.Request.FormValue("key")," "))
+	code := utils.FilterSpecialChar(strings.Trim(c.Request.FormValue("code")," "))
 	isRight := utils.CheckCaptcha(key,[]byte(code))
 	if isRight {
 		cg.Success(nil)
@@ -37,8 +38,8 @@ func SendSMSVerifyCodeAction(c *gin.Context) {
 		return
 	}
 
-	captchaVal := c.Request.FormValue("captcha_value")
-	captchaKey := c.Request.FormValue("captcha_key")
+	captchaVal := utils.FilterSpecialChar(strings.Trim(c.Request.FormValue("captcha_value")," "))
+	captchaKey := utils.FilterSpecialChar(strings.Trim(c.Request.FormValue("captcha_key"),""))
 	if !utils.CheckCaptcha(captchaKey, []byte(captchaVal)) {
 		cg.Failed("图形验证码不正确")
 		return

@@ -41,7 +41,7 @@ func IsVerifying(c *gin.Context) bool {
 func getAppVersionRow(c *gin.Context) dao.AppVersion {
 	dtype := GetDeviceType(c)
 	version := GetAppVersion(c)
-	channel := GetAndroidChannel(c)
+	channel := GetChannel(c)
 	row := dao.GetAppVersionRow(version,dtype,channel)
 	return row
 }
@@ -79,7 +79,7 @@ func GetDeviceType(c *gin.Context) string {
 	deviceType := strings.ToLower(c.Request.Header.Get("h-device-type"))
 	return deviceType
 }
-func GetAndroidChannel(c *gin.Context) string {
+func GetChannel(c *gin.Context) string {
 	return strings.ToLower(c.Request.Header.Get("h-channel"))
 }
 func IsIOS(c *gin.Context) bool {

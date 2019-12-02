@@ -45,6 +45,11 @@ func UserFindByPhone(phone string) (user User) {
 	db.Where("phone = ?", phone).First(&user)
 	return user
 }
+func UserFindByNickName(nickname string) (user User) {
+	db, _ := DB.OpenCartoon()
+	db.Where("nick_name = ?", nickname).First(&user)
+	return user
+}
 func UserFindByDeviceToken(devicetoken string) (user User) {
 	db, _ := DB.OpenCartoon()
 	db.Where("user_device = ?", devicetoken).First(&user)
@@ -63,4 +68,9 @@ func UserCreate(user *User) bool {
 	db.Create(user)
 	db.First(user)
 	return user.ID > 0
+}
+
+func UpdateUser(userId int, updateData map[string]string) (rowsAffected int64) {
+	db, _ := DB.OpenCartoon()
+	return db.Table("users").Where("id = ?",userId).Updates(updateData).RowsAffected
 }

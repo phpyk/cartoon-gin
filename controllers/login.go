@@ -43,12 +43,12 @@ func PasswordLoginAction(c *gin.Context) {
 
 func LoginAction(c *gin.Context) {
 	cg := utils.Gin{C: c,}
-	phone := c.Request.FormValue("phone")
+	phone := utils.FilterSpecialChar(strings.Trim(c.Request.FormValue("phone")," "))
 	if !utils.IsPhone(phone) {
 		cg.Failed("手机号格式不正确")
 		return
 	}
-	smsCode := c.Request.FormValue("verify_code")
+	smsCode := utils.FilterSpecialChar(strings.Trim(c.Request.FormValue("verify_code")," "))
 	if !checkSmsCode(phone,smsCode) {
 		cg.Failed("手机号验证码不正确")
 		return
