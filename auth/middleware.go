@@ -1,11 +1,11 @@
 package auth
 
 import (
-	"cartoon-gin/utils"
 	"cartoon-gin/dao"
+	"cartoon-gin/utils"
+	"encoding/json"
 	"github.com/dgrijalva/jwt-go"
 	"github.com/gin-gonic/gin"
-	"encoding/json"
 	"log"
 	"net/http"
 	"time"
@@ -29,29 +29,29 @@ func GenerateToken(user *dao.User) (string, error) {
 	return tokenString, err
 }
 
-func GenerateRedisToken(user *dao.User) (token string,err error) {
-	tokenKey := utils.RandomString(32,0)
-	tokenValue,err := json.Marshal(user)
-	expireTime := 30 * time.Hour * time.Duration(24 * 365)
+func GenerateRedisToken(user *dao.User) (token string, err error) {
+	tokenKey := utils.RandomString(32, 0)
+	tokenValue, err := json.Marshal(user)
+	expireTime := 30 * time.Hour * time.Duration(24*365)
 	utils.CheckError(err)
 
 	clt := utils.NewAuthRedisClient()
-	sts := clt.Set(tokenKey,tokenValue,expireTime)
-	res,err := sts.Result()
+	sts := clt.Set(tokenKey, tokenValue, expireTime)
+	res, err := sts.Result()
 	if res != "OK" || err != nil {
-		return tokenKey,err
+		return tokenKey, err
 	}
-	return tokenKey,nil
+	return tokenKey, nil
 }
 
 func CheckRedisToken(token string) (userJson string, err error) {
 	clt := utils.NewAuthRedisClient()
 	sts := clt.Get(token)
-	res,err := sts.Result()
+	res, err := sts.Result()
 	if err != nil {
-		return "",err
+		return "", err
 	}
-	return res,nil
+	return res, nil
 }
 
 func ValidateToken(next http.Handler) http.HandlerFunc {
@@ -109,7 +109,7 @@ func ValidateJWTToken() gin.HandlerFunc {
 			myClaims := token.Claims.(*MyClaims)
 			log.Printf("claims: %+v \n", myClaims)
 			user := dao.UserFindByID(myClaims.UID)
-			c.Set("user",&user)
+			c.Set("user", &user)
 			//c.Set("uid", myClaims.UID)
 			c.Next()
 		}
@@ -125,28 +125,26 @@ func ValidateRedisToken() gin.HandlerFunc {
 			return
 		} else {
 			tokenStr = tokenStr[7:]
-			userJson,err := CheckRedisToken(tokenStr)
+			userJson, err := CheckRedisToken(tokenStr)
 			if err != nil {
 				cg.UnAuthorized()
 				return
 			}
 			var user dao.User
-			err = json.Unmarshal([]byte(userJson),&user)
+			err = json.Unmarshal([]byte(userJson), &user)
 			if err != nil {
 				cg.UnAuthorized()
 				return
 			}
 			log.Printf("logined user: %+v \n", user)
-			c.Set("user",&user)
+			c.Set("user", &user)
 			c.Next()
 		}
 	}
 }
-
 
 func responseNotAuthorized(w http.ResponseWriter) {
 	response := utils.Response{State: 0, Message: "You are unauthorized"}
 	utils.ResponseWithJson(w, http.StatusUnauthorized, response)
 	return
 }
-

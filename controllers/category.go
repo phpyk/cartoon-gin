@@ -7,7 +7,7 @@ import (
 )
 
 func CategoryLabelsAction(c *gin.Context) {
-	cg := utils.Gin{C: c,}
+	cg := utils.Gin{C: c}
 	cats := dao.GetAllCategories()
 	cg.Success(cats)
 }

@@ -11,7 +11,7 @@ import (
 )
 
 func ProfileBaseInfoAction(c *gin.Context) {
-	cg := utils.Gin{C: c,}
+	cg := utils.Gin{C: c}
 	user := CurrentUser(c)
 
 	responseData := make(map[string]interface{})
@@ -20,10 +20,10 @@ func ProfileBaseInfoAction(c *gin.Context) {
 }
 
 func ProfileUpdateAction(c *gin.Context) {
-	cg := utils.Gin{C: c,}
+	cg := utils.Gin{C: c}
 	user := CurrentUser(c)
 
-	nickName := utils.FilterSpecialChar(strings.Trim(c.Request.FormValue("nick_name")," "))
+	nickName := utils.FilterSpecialChar(strings.Trim(c.Request.FormValue("nick_name"), " "))
 	if nickName == "" {
 		cg.Failed("昵称不能为空")
 		return
@@ -39,12 +39,12 @@ func ProfileUpdateAction(c *gin.Context) {
 	}
 	updateData := make(map[string]string)
 	updateData["nick_name"] = nickName
-	dao.UpdateUser(user.ID,updateData)
+	dao.UpdateUser(user.ID, updateData)
 	cg.Success(nil)
 }
 
 func UserBindPhoneAction(c *gin.Context) {
-	cg := utils.Gin{C: c,}
+	cg := utils.Gin{C: c}
 	err := checkPhoneCodeAndCaptcha(c)
 	if err != nil {
 		cg.Failed(err.Error())
@@ -60,13 +60,14 @@ func UserBindPhoneAction(c *gin.Context) {
 	}
 	updateData := make(map[string]string)
 	updateData["phone"] = phone
-	updateData["user_type"] = fmt.Sprintf("%v",dao.UserTypeNormal)
-	dao.UpdateUser(currentUser.ID,updateData)
+	updateData["user_type"] = fmt.Sprintf("%v", dao.UserTypeNormal)
+	dao.UpdateUser(currentUser.ID, updateData)
 	cg.Success(nil)
 }
+
 //修改手机号--校验旧号码
 func UserChangePhoneVerify(c *gin.Context) {
-	cg := utils.Gin{C: c,}
+	cg := utils.Gin{C: c}
 	err := checkPhoneCodeAndCaptcha(c)
 	if err != nil {
 		cg.Failed(err.Error())
@@ -74,9 +75,10 @@ func UserChangePhoneVerify(c *gin.Context) {
 	}
 	cg.Success(nil)
 }
+
 //修改手机号--保存新号码
 func UserChangePhoneSubmit(c *gin.Context) {
-	cg := utils.Gin{C: c,}
+	cg := utils.Gin{C: c}
 	err := checkPhoneCodeAndCaptcha(c)
 	if err != nil {
 		cg.Failed(err.Error())
@@ -87,7 +89,7 @@ func UserChangePhoneSubmit(c *gin.Context) {
 	currentUser := CurrentUser(c)
 	updateData := make(map[string]string)
 	updateData["phone"] = phone
-	dao.UpdateUser(currentUser.ID,updateData)
+	dao.UpdateUser(currentUser.ID, updateData)
 	cg.Success(nil)
 }
 

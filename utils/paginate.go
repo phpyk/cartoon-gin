@@ -17,7 +17,7 @@ func AppendPaginateData(result map[string]interface{}, count, currentPage, perPa
 
 func calcuLastPage(dataCount, perPage int) int {
 	var pcount float64
-	pcount = float64(dataCount)/float64(perPage)
+	pcount = float64(dataCount) / float64(perPage)
 	fv := math.Ceil(pcount)
 	return int(math.Ceil(fv))
 }

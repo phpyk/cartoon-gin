@@ -11,7 +11,7 @@ func TestBuyChapter(t *testing.T) {
 	//fmt.Printf("%+v \n", user)
 	//fmt.Printf("%+v \n", chapter)
 	//return
-	err := BuyChapter(&user,&chapter)
+	err := BuyChapter(&user, &chapter)
 	if err != nil {
 		fmt.Println(err)
 	}

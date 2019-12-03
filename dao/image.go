@@ -12,7 +12,7 @@ type Image struct {
 	IsDeleted int    `json:"is_deleted"`
 }
 
-func GetImagesByChapterId(chapterId,limit int) []Image {
+func GetImagesByChapterId(chapterId, limit int) []Image {
 	db, _ := DB.OpenCartoon()
 	var list []Image
 	query := db.Table("cartoon_images").Where("chapter_id = ?", chapterId).Order("sequence ASC")
@@ -35,9 +35,9 @@ func FindImagesByCartoonId(cartoonId int) []Image {
 	return list
 }
 
-func FindImagesForUpload(limit int,lastMaxId int) []Image {
+func FindImagesForUpload(limit int, lastMaxId int) []Image {
 	db, _ := DB.OpenCartoon()
 	var list []Image
-	db.Table("cartoon_images").Where("id > ?",lastMaxId).Limit(limit).Order("id ASC").Scan(&list)
+	db.Table("cartoon_images").Where("id > ?", lastMaxId).Limit(limit).Order("id ASC").Scan(&list)
 	return list
 }

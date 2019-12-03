@@ -37,8 +37,8 @@ const (
 
 func GetRedisKey(originalKey string, params map[string]string) string {
 	var formatKey string = originalKey
-	for k,v := range params {
-		formatKey = strings.Replace(formatKey,"{"+k+"}",v,-1)
+	for k, v := range params {
+		formatKey = strings.Replace(formatKey, "{"+k+"}", v, -1)
 	}
 	return formatKey
 }
@@ -59,7 +59,7 @@ func NewAuthRedisClient() *redis.Client {
 	})
 }
 
-func RedisSave(k,v string) *redis.StatusCmd {
+func RedisSave(k, v string) *redis.StatusCmd {
 	clt := NewRedisClient()
-	return clt.Set(k,v,0)
+	return clt.Set(k, v, 0)
 }

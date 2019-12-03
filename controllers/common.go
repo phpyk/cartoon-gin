@@ -9,8 +9,8 @@ import (
 )
 
 func CaptchaAction(c *gin.Context) {
-	cg := utils.Gin{C: c,}
-	captchaId,captchaData := utils.GetNewCaptcha()
+	cg := utils.Gin{C: c}
+	captchaId, captchaData := utils.GetNewCaptcha()
 	outData := make(map[string]string)
 	outData["key"] = captchaId
 	outData["img"] = captchaData
@@ -18,10 +18,10 @@ func CaptchaAction(c *gin.Context) {
 }
 
 func CaptchaCheckAction(c *gin.Context) {
-	cg := utils.Gin{C: c,}
-	key := utils.FilterSpecialChar(strings.Trim(c.Request.FormValue("key")," "))
-	code := utils.FilterSpecialChar(strings.Trim(c.Request.FormValue("code")," "))
-	isRight := utils.CheckCaptcha(key,[]byte(code))
+	cg := utils.Gin{C: c}
+	key := utils.FilterSpecialChar(strings.Trim(c.Request.FormValue("key"), " "))
+	code := utils.FilterSpecialChar(strings.Trim(c.Request.FormValue("code"), " "))
+	isRight := utils.CheckCaptcha(key, []byte(code))
 	if isRight {
 		cg.Success(nil)
 	} else {
@@ -31,15 +31,15 @@ func CaptchaCheckAction(c *gin.Context) {
 }
 
 func SendSMSVerifyCodeAction(c *gin.Context) {
-	cg := utils.Gin{C: c,}
+	cg := utils.Gin{C: c}
 	phone := c.Request.FormValue("phone")
 	if !utils.IsPhone(phone) {
 		cg.Failed("手机号格式不正确")
 		return
 	}
 
-	captchaVal := utils.FilterSpecialChar(strings.Trim(c.Request.FormValue("captcha_value")," "))
-	captchaKey := utils.FilterSpecialChar(strings.Trim(c.Request.FormValue("captcha_key"),""))
+	captchaVal := utils.FilterSpecialChar(strings.Trim(c.Request.FormValue("captcha_value"), " "))
+	captchaKey := utils.FilterSpecialChar(strings.Trim(c.Request.FormValue("captcha_key"), ""))
 	if !utils.CheckCaptcha(captchaKey, []byte(captchaVal)) {
 		cg.Failed("图形验证码不正确")
 		return
@@ -47,25 +47,25 @@ func SendSMSVerifyCodeAction(c *gin.Context) {
 
 	randomStr := utils.RandomString(4, 1)
 	smsClient := utils.NewSmsClient()
-	sendResult,err := smsClient.SendTemplateSMS(phone,[]string{randomStr,"5分钟"})
+	sendResult, err := smsClient.SendTemplateSMS(phone, []string{randomStr, "5分钟"})
 	utils.CheckError(err)
 
 	if err == nil && sendResult["statusCode"] == "000000" {
-		saveCodeToRedis(phone,randomStr)
+		saveCodeToRedis(phone, randomStr)
 		cg.Success(nil)
-	}else {
+	} else {
 		cg.Failed("发送验证码失败")
 		return
 	}
 }
 
-func saveCodeToRedis(phone,code string) bool {
+func saveCodeToRedis(phone, code string) bool {
 	redisClient := utils.NewRedisClient()
 	par := make(map[string]string)
 	par["phone"] = phone
-	key := utils.GetRedisKey(utils.RDS_KEY_SMS_CODE,par)
+	key := utils.GetRedisKey(utils.RDS_KEY_SMS_CODE, par)
 	expireTime := 5 * time.Minute
-	ok,err := redisClient.Set(key,code,expireTime).Result()
+	ok, err := redisClient.Set(key, code, expireTime).Result()
 	utils.CheckError(err)
 	if ok == "OK" {
 		return true

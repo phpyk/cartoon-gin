@@ -13,13 +13,13 @@ func TestSearchCartoonByConditions(t *testing.T) {
 	request.Keywords = "战士!@#$%^&^%$%^&*("
 	//keywords := strings.Trim(request.Keywords," ")
 	keywords := utils.FilterSpecialChar(request.Keywords)
-	fmt.Println("keywords: ",keywords)
+	fmt.Println("keywords: ", keywords)
 	result := SearchCartoonByConditions(request)
-	fmt.Printf("%+v",result)
+	fmt.Printf("%+v", result)
 }
 
 func TestGetRecommendFromCache(t *testing.T) {
 	userId := 133
 	list := GetRecommendFromCache(userId)
-	fmt.Printf("%v",list)
+	fmt.Printf("%v", list)
 }

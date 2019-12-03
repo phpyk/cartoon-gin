@@ -28,8 +28,8 @@ const (
 	CartoonIsEndYes = 1
 	CartoonIsEndNo  = 0
 	//cartoon类型
-	CartoonTypeNormal = 1
-	CartoonTypeHM = 2
+	CartoonTypeNormal   = 1
+	CartoonTypeHM       = 2
 	CartoonTypeExternal = 3
 )
 
@@ -58,21 +58,21 @@ type Cartoon struct {
 }
 
 type QueryCartoons struct {
-	Id            int          `json:"cartoon_id"`
-	CartoonName   string       `json:"cartoon_name"`
-	HoverImage    string       `json:"hover_image"`
-	Author        string       `json:"author"`
-	Tags          string       `json:"tags"`
-	ExternalUrl   string       `json:"external_url"`
-	IsEnd         int          `json:"is_end"`
-	LatestChapter int          `json:"latest_chapter"`
-	KeywordsIds   string       `json:"keywords_ids"`
-	FreeType      int          `json:"free_type"`
-	Depiction      string `json:"depiction"`
-	CreatedAt     utils.MyTime `json:"-" time_format:"2006-01-02 15:04:05"`
-	UpdatedAt     utils.MyTime `json:"-" time_format:"2006-01-02 15:04:05"`
-	LastReadChapterId int `json:"last_read_chapter_id"`
-	LastReadTime int `json:"last_read_time"`
+	Id                int          `json:"cartoon_id"`
+	CartoonName       string       `json:"cartoon_name"`
+	HoverImage        string       `json:"hover_image"`
+	Author            string       `json:"author"`
+	Tags              string       `json:"tags"`
+	ExternalUrl       string       `json:"external_url"`
+	IsEnd             int          `json:"is_end"`
+	LatestChapter     int          `json:"latest_chapter"`
+	KeywordsIds       string       `json:"keywords_ids"`
+	FreeType          int          `json:"free_type"`
+	Depiction         string       `json:"depiction"`
+	CreatedAt         utils.MyTime `json:"-" time_format:"2006-01-02 15:04:05"`
+	UpdatedAt         utils.MyTime `json:"-" time_format:"2006-01-02 15:04:05"`
+	LastReadChapterId int          `json:"last_read_chapter_id"`
+	LastReadTime      int          `json:"last_read_time"`
 }
 
 type SearchRequest struct {
@@ -176,23 +176,23 @@ func GetRecommend(userId, totalCount, ratedCount int) []map[string]interface{} {
 		if ratedCount > 0 {
 			forRated = true
 		}
-		list = GetCartoonsInRandom(totalCount,forRated)
-	}else {
+		list = GetCartoonsInRandom(totalCount, forRated)
+	} else {
 		list = GetRecommendFromCache(userId)
 		if len(list) == 0 {
-			ratedList := GetCartoonsInRandom(ratedCount,true)
+			ratedList := GetCartoonsInRandom(ratedCount, true)
 			normalCount := totalCount - ratedCount
-			normalList := GetCartoonsInRandom(normalCount,false)
+			normalList := GetCartoonsInRandom(normalCount, false)
 
-			list = append(list,ratedList...)
-			list = append(list,normalList...)
+			list = append(list, ratedList...)
+			list = append(list, normalList...)
 			// shuffle slice`s order
 			rand.Seed(time.Now().UnixNano())
 			rand.Shuffle(len(list), func(i, j int) {
-				list[i],list[j] = list[j],list[i]
+				list[i], list[j] = list[j], list[i]
 			})
 			//save to redis
-			saveRecommendToCache(userId,list)
+			saveRecommendToCache(userId, list)
 		}
 	}
 	return formatQueryCartoons(list)
@@ -208,14 +208,14 @@ func GetCartoonsInRandom(count int, isRated bool) []QueryCartoons {
 		cartoonIsRated = 1
 	}
 
-	db,_ := DB.OpenCartoon()
+	db, _ := DB.OpenCartoon()
 
 	columns := "id, cartoon_name, hover_image, author, is_end, latest_chapter, tags, depiction, free_type, external_url, created_at, updated_at"
 	db.Debug().Table("cartoons as c").Select(columns).
 		Where("c.verify_status = ?", CartoonVerifyStatusPass).
 		Where("c.is_on_sale = ?", CartoonIsOnSale).
-		Where("c.cartoon_type != ?",CartoonTypeExternal).
-		Where("c.is_rated = ?",cartoonIsRated).
+		Where("c.cartoon_type != ?", CartoonTypeExternal).
+		Where("c.is_rated = ?", cartoonIsRated).
 		Order("RAND()").
 		Limit(count).
 		Scan(&list)
@@ -236,21 +236,20 @@ func formatQueryCartoons(list []QueryCartoons) []map[string]interface{} {
 	return result
 }
 
-
 func GetRecommendFromCache(userId int) []QueryCartoons {
 	var data []QueryCartoons
 
 	params := make(map[string]string)
 	params["uid"] = strconv.Itoa(userId)
-	key := utils.GetRedisKey(utils.RDS_KEY_USER_CARTOON_RECOMMEND_DATA,params)
+	key := utils.GetRedisKey(utils.RDS_KEY_USER_CARTOON_RECOMMEND_DATA, params)
 	client := utils.NewRedisClient()
-	jsonResult,_ := client.Get(key).Result()
+	jsonResult, _ := client.Get(key).Result()
 
 	if jsonResult == "" {
 		return data
 	}
 
-	err := json.Unmarshal([]byte(jsonResult),&data)
+	err := json.Unmarshal([]byte(jsonResult), &data)
 	utils.CheckError(err)
 	return data
 }
@@ -258,11 +257,11 @@ func GetRecommendFromCache(userId int) []QueryCartoons {
 func saveRecommendToCache(userId int, list []QueryCartoons) {
 	params := make(map[string]string)
 	params["uid"] = strconv.Itoa(userId)
-	key := utils.GetRedisKey(utils.RDS_KEY_USER_CARTOON_RECOMMEND_DATA,params)
+	key := utils.GetRedisKey(utils.RDS_KEY_USER_CARTOON_RECOMMEND_DATA, params)
 	client := utils.NewRedisClient()
 
-	data,err := json.Marshal(list)
+	data, err := json.Marshal(list)
 
 	utils.CheckError(err)
-	client.Set(key,data,time.Minute*5)
+	client.Set(key, data, time.Minute*5)
 }

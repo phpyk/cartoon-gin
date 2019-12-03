@@ -10,8 +10,8 @@ import (
 )
 
 func CurrentUser(c *gin.Context) (user *dao.User) {
-	if value,exists := c.Get("user"); exists && value != nil {
-		user,ok := value.(*dao.User)
+	if value, exists := c.Get("user"); exists && value != nil {
+		user, ok := value.(*dao.User)
 		if !ok {
 			panic("context user type error")
 		}
@@ -20,8 +20,8 @@ func CurrentUser(c *gin.Context) (user *dao.User) {
 	return
 }
 
-func FlushCurrentUser(c *gin.Context,user *dao.User) {
-	c.Set("user",user)
+func FlushCurrentUser(c *gin.Context, user *dao.User) {
+	c.Set("user", user)
 }
 
 func ShowReted(c *gin.Context) bool {
@@ -34,7 +34,7 @@ func ShowReted(c *gin.Context) bool {
 
 func IsVerifying(c *gin.Context) bool {
 	row := getAppVersionRow(c)
-	log.Printf("version row:%+v\n",row)
+	log.Printf("version row:%+v\n", row)
 	return row.IsVerifying == 1
 }
 
@@ -42,19 +42,19 @@ func getAppVersionRow(c *gin.Context) dao.AppVersion {
 	dtype := GetDeviceType(c)
 	version := GetAppVersion(c)
 	channel := GetChannel(c)
-	row := dao.GetAppVersionRow(version,dtype,channel)
+	row := dao.GetAppVersionRow(version, dtype, channel)
 	return row
 }
 
 func IsUSAIp(c *gin.Context) bool {
 	//TODO 添加IP归属地检测
 	//ip := GetClientIP(c)
-	return false;
+	return false
 }
 
 func IsApplePayUser(userId int) bool {
 	redisClient := utils.NewRedisClient()
-	isMember,err := redisClient.SIsMember(utils.RDS_KEY_APPLE_PAY_USERS,userId).Result()
+	isMember, err := redisClient.SIsMember(utils.RDS_KEY_APPLE_PAY_USERS, userId).Result()
 	utils.CheckError(err)
 	return isMember
 }

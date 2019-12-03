@@ -42,14 +42,14 @@ func PasswordLoginAction(c *gin.Context) {
 }
 
 func LoginAction(c *gin.Context) {
-	cg := utils.Gin{C: c,}
-	phone := utils.FilterSpecialChar(strings.Trim(c.Request.FormValue("phone")," "))
+	cg := utils.Gin{C: c}
+	phone := utils.FilterSpecialChar(strings.Trim(c.Request.FormValue("phone"), " "))
 	if !utils.IsPhone(phone) {
 		cg.Failed("手机号格式不正确")
 		return
 	}
-	smsCode := utils.FilterSpecialChar(strings.Trim(c.Request.FormValue("verify_code")," "))
-	if !checkSmsCode(phone,smsCode) {
+	smsCode := utils.FilterSpecialChar(strings.Trim(c.Request.FormValue("verify_code"), " "))
+	if !checkSmsCode(phone, smsCode) {
 		cg.Failed("手机号验证码不正确")
 		return
 	}
@@ -106,7 +106,7 @@ func VisitorLoginAction(c *gin.Context) {
 }
 
 func LoginDevAccount(c *gin.Context) {
-	cg := utils.Gin{C:c}
+	cg := utils.Gin{C: c}
 	user := dao.UserFindByPhone("17505818455")
 	if !(user.ID > 0) {
 		cg.Failed("用户不存在")
@@ -132,7 +132,7 @@ func LogoutAction(c *gin.Context) {
 	token = token[7:]
 	clt := utils.NewAuthRedisClient()
 	sts := clt.Del(token)
-	_,err := sts.Result()
+	_, err := sts.Result()
 	if err != nil {
 		cg.Failed("退出失败")
 		return
@@ -167,13 +167,13 @@ func loginUserWithJWT(user dao.User, c *gin.Context) (map[string]interface{}, er
 	resp["user_info"] = user
 	return resp, err
 }
-func loginUserWithRedisAuth(user dao.User,c *gin.Context) (map[string]interface{}, error) {
+func loginUserWithRedisAuth(user dao.User, c *gin.Context) (map[string]interface{}, error) {
 	lastLoginTime := uint(time.Now().Unix())
 	lastLoginIp := c.Request.RemoteAddr
 	db, _ := DB.OpenCartoon()
 	db.Model(&user).Updates(dao.User{LastLoginIp: lastLoginIp, LastLoginTime: lastLoginTime})
 
-	token,err := auth.GenerateRedisToken(&user)
+	token, err := auth.GenerateRedisToken(&user)
 
 	resp := make(map[string]interface{})
 	resp["token"] = token
@@ -186,9 +186,8 @@ func checkSmsCode(phone, code string) bool {
 	redisClient := utils.NewRedisClient()
 	par := make(map[string]string)
 	par["phone"] = phone
-	key := utils.GetRedisKey(utils.RDS_KEY_SMS_CODE,par)
-	redisCode,err := redisClient.Get(key).Result()
+	key := utils.GetRedisKey(utils.RDS_KEY_SMS_CODE, par)
+	redisCode, err := redisClient.Get(key).Result()
 	utils.CheckError(err)
 	return redisCode == code
 }
-

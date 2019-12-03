@@ -1,7 +1,7 @@
 package utils
 
 type RecommendCalculator struct {
-	UserType int
+	UserType     int
 	CanShowRated bool
 	IsVerifying  bool
 }

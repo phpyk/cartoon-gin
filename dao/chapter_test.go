@@ -11,8 +11,8 @@ func TestGetChapterRow(t *testing.T) {
 }
 
 func TestGetChapterList(t *testing.T) {
-	list := GetChapterList(4166,1,true,1, 20)
+	list := GetChapterList(4166, 1, true, 1, 20)
 	for _, row := range list {
-		fmt.Printf("%+v \n",row)
+		fmt.Printf("%+v \n", row)
 	}
 }

@@ -65,27 +65,27 @@ func GeneralNickName() string {
 	return pre + end
 }
 
-func GetTagsArray(tagsStr string,count int) []string {
-	tagArr := strings.Split(tagsStr,",")
+func GetTagsArray(tagsStr string, count int) []string {
+	tagArr := strings.Split(tagsStr, ",")
 	var returnTags []string
 	tag := ""
-	for _,v := range tagArr {
+	for _, v := range tagArr {
 		if len(returnTags) == count {
 			break
 		}
 		if v == "" || v == tag {
 			continue
 		}
-		returnTags = append(returnTags,v)
+		returnTags = append(returnTags, v)
 		tag = v
 	}
 	return returnTags
 }
 
 func FilterSpecialChar(str string) string {
-	chars := []byte(",.><=-+?/!@#$%^&*():;'{}[]_|！￥…（）『』「」【】：；“”‘’、《》？")
-	for _,c := range chars {
-		str = strings.Replace(str,string(c),"",-1)
+	chars := []byte("><=-+?/!@#$%^&*():;'{}[]_|！￥…（）『』「」【】：；“”‘’、《》？")
+	for _, c := range chars {
+		str = strings.Replace(str, string(c), "", -1)
 	}
 	return str
 }

@@ -11,7 +11,7 @@ import (
 )
 
 func BookcaseTabsAction(c *gin.Context) {
-	cg := utils.Gin{C: c,}
+	cg := utils.Gin{C: c}
 	user := CurrentUser(c)
 
 	var searchRequest dao.BookCaseSearchRequest
@@ -27,7 +27,7 @@ func BookcaseTabsAction(c *gin.Context) {
 	searchRequest.IsVerifying = IsVerifying(c)
 	searchRequest.ShowRated = ShowReted(c)
 
-	fmt.Printf("%+v\n",searchRequest)
+	fmt.Printf("%+v\n", searchRequest)
 
 	responseData := make(map[string]interface{})
 	var totalCount = 0
@@ -46,13 +46,13 @@ func BookcaseTabsAction(c *gin.Context) {
 		responseData["data"] = dao.GetUserBoughtCartoons(searchRequest)
 		totalCount = dao.GetUserBoughtCartoonsCount(searchRequest)
 	}
-	responseData = utils.AppendPaginateData(responseData,totalCount,searchRequest.Page,searchRequest.PerPage,c.Request.RequestURI)
+	responseData = utils.AppendPaginateData(responseData, totalCount, searchRequest.Page, searchRequest.PerPage, c.Request.RequestURI)
 
 	cg.Success(responseData)
 }
 
 func BookcaseDeleteAction(c *gin.Context) {
-	cg := utils.Gin{C: c,}
+	cg := utils.Gin{C: c}
 	cartoonIdStr := c.Request.FormValue("cartoon_id_str")
 	tab := c.Request.FormValue("tab")
 
@@ -60,24 +60,24 @@ func BookcaseDeleteAction(c *gin.Context) {
 		cg.Failed("params required")
 		return
 	}
-	cartoonIdSlice := strings.Split(cartoonIdStr,",")
+	cartoonIdSlice := strings.Split(cartoonIdStr, ",")
 	var deletedIdSlice []int
 	for _, stringId := range cartoonIdSlice {
 		if stringId == "" {
 			continue
 		}
-		intId,err := strconv.Atoi(stringId)
+		intId, err := strconv.Atoi(stringId)
 		if err != nil || intId == 0 {
 			continue
 		}
-		deletedIdSlice = append(deletedIdSlice,intId)
+		deletedIdSlice = append(deletedIdSlice, intId)
 	}
 
 	user := CurrentUser(c)
 	if tab == "collect" {
-		dao.DeleteUserCollection(user.ID,deletedIdSlice)
-	}else if tab == "history" {
-		dao.DeleteUserReadingHistory(user.ID,deletedIdSlice)
+		dao.DeleteUserCollection(user.ID, deletedIdSlice)
+	} else if tab == "history" {
+		dao.DeleteUserReadingHistory(user.ID, deletedIdSlice)
 	}
 	cg.Success(nil)
 }

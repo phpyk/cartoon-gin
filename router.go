@@ -71,8 +71,16 @@ func initRouter() *gin.Engine {
 	{
 		appConfig.GET("reports",ConfigReportAction)
 		appConfig.GET("vip-config",ConfigVipAction)
-		appConfig.GET("coin-config",ConfigCoinAction)
+		appConfig.GET("coin-config",auth.ValidateJWTToken(),ConfigCoinAction)
 		appConfig.GET("pay-channels",ConfigPayChannelsAction)
+	}
+	//举报
+	router.POST("/api/report",auth.ValidateJWTToken(),ReportStoreAction)
+	//用户反馈
+	feedback := router.Group("/api/feedback/").Use(auth.ValidateJWTToken())
+	{
+		feedback.POST("save",FeedbackStoreAction)
+		feedback.GET("list",FeedbackListAction)
 	}
 	return router
 }

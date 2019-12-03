@@ -2,22 +2,22 @@ package dao
 
 import "cartoon-gin/DB"
 
-type ChargeVipConfig struct {
+type ChargeCoinConfig struct {
 	MyGormModel
 	Label             string  `json:"label"`
 	Price             float64 `json:"price"`
-	MonthCou          int     `json:"month_cou"`
+	Amount            int     `json:"amount"`
 	Extra             int     `json:"extra"`
 	IsRecommend       int     `json:"is_recommend"`
-	IsForever         int     `json:"is_forever"`
+	IsDouble          int     `json:"is_double"`
 	ApplepayProductId string  `json:"-"`
 	PackageType       string  `json:"-"`
 	ClientType        int     `json:"-"`
 }
 
-func GetChargeVipConfigs(packageType string) []ChargeVipConfig {
+func GetChargeCoinConfigs(packageType string) []ChargeCoinConfig {
 	db, _ := DB.OpenCartoon()
-	var rows []ChargeVipConfig
-	db.Table("charge_vip_configs").Where("package_type = ?", packageType).Scan(&rows)
+	var rows []ChargeCoinConfig
+	db.Table("charge_coin_configs").Where("package_type = ?", packageType).Scan(&rows)
 	return rows
 }

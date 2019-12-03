@@ -72,5 +72,5 @@ func UserCreate(user *User) bool {
 
 func UpdateUser(userId int, updateData map[string]string) (rowsAffected int64) {
 	db, _ := DB.OpenCartoon()
-	return db.Table("users").Where("id = ?",userId).Updates(updateData).RowsAffected
+	return db.Table("users").Where("id = ?", userId).Updates(updateData).RowsAffected
 }

@@ -30,21 +30,23 @@ func (g *Gin) Success(data interface{}) {
 	})
 	g.C.Abort()
 }
+
 //业务错误 statusCode = 200
 func (g *Gin) Failed(errmsg string) {
 	g.C.JSON(http.StatusOK, gin.H{
 		"state":   FAILD_CODE,
 		"message": "error",
-		"result" : map[string]string{"errmsg":errmsg},
+		"result":  map[string]string{"errmsg": errmsg},
 	})
 	g.C.Abort()
 }
+
 // 程序错误
 func (g *Gin) Error(errmsg string) {
 	g.C.JSON(http.StatusInternalServerError, gin.H{
 		"state":   FAILD_CODE,
 		"message": "error",
-		"result" : map[string]string{"errmsg":errmsg},
+		"result":  map[string]string{"errmsg": errmsg},
 	})
 	g.C.Abort()
 }
@@ -54,11 +56,10 @@ func (g *Gin) UnAuthorized() {
 	g.C.JSON(http.StatusUnauthorized, gin.H{
 		"state":   UNAUTHORIZED,
 		"message": "error",
-		"result" : map[string]string{"errmsg":"You are unauthorized"},
+		"result":  map[string]string{"errmsg": "You are unauthorized"},
 	})
 	g.C.Abort()
 }
-
 
 func (g *Gin) Response(httpCode int, resp Response) {
 	g.C.JSON(httpCode, resp)

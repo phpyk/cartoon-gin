@@ -9,19 +9,19 @@ import (
 
 type UserCollection struct {
 	MyGormModel
-	UserId int `json:"user_id"`
+	UserId    int `json:"user_id"`
 	CartoonId int `json:"cartoon_id"`
 }
 
 type BookCaseSearchRequest struct {
-	Tab string `form:"tab" json:"tab"`
-	UserId int `form:"user_id" json:"user_id"`
-	SortType int `form:"sort_type" json:"sort_type"`
-	Page int `form:"page" json:"page"`
-	PerPage int `form:"per_page" default:"18" json:"per_page"`
-	IsAndroid bool `json:"is_android"`
-	IsVerifying bool `json:"is_verifying"`
-	ShowRated bool `json:"show_rated"`
+	Tab         string `form:"tab" json:"tab"`
+	UserId      int    `form:"user_id" json:"user_id"`
+	SortType    int    `form:"sort_type" json:"sort_type"`
+	Page        int    `form:"page" json:"page"`
+	PerPage     int    `form:"per_page" default:"18" json:"per_page"`
+	IsAndroid   bool   `json:"is_android"`
+	IsVerifying bool   `json:"is_verifying"`
+	ShowRated   bool   `json:"show_rated"`
 }
 
 func GetUserCollections(searchRequest BookCaseSearchRequest) []map[string]interface{} {
@@ -41,16 +41,16 @@ func GetUserCollectionCount(searchRequest BookCaseSearchRequest) int {
 	return totalCount
 }
 
-func CartoonHasBeenCollected(userId,cartoonId int) bool {
-	db,_ := DB.OpenCartoon()
+func CartoonHasBeenCollected(userId, cartoonId int) bool {
+	db, _ := DB.OpenCartoon()
 	var count int
-	db.Table("user_collections").Where("user_id = ?",userId).Where("cartoon_id = ?",cartoonId).Count(&count)
+	db.Table("user_collections").Where("user_id = ?", userId).Where("cartoon_id = ?", cartoonId).Count(&count)
 	return count > 0
 }
 
 func CollectCartoon(userId, cartoonId int) bool {
-	record := UserCollection{UserId: userId, CartoonId: cartoonId,}
-	db,_ := DB.OpenCartoon()
+	record := UserCollection{UserId: userId, CartoonId: cartoonId}
+	db, _ := DB.OpenCartoon()
 	if db.NewRecord(record) {
 		db.Create(&record)
 		return true
@@ -60,9 +60,9 @@ func CollectCartoon(userId, cartoonId int) bool {
 }
 
 func CancelCollectCartoon(userId, cartoonId int) bool {
-	db,_ := DB.OpenCartoon()
+	db, _ := DB.OpenCartoon()
 	var record UserCollection
-	db.Table("user_collections").Where("user_id = ?",userId).Where("cartoon_id = ?",cartoonId).First(&record)
+	db.Table("user_collections").Where("user_id = ?", userId).Where("cartoon_id = ?", cartoonId).First(&record)
 	if record.ID > 0 {
 		db.Delete(&record)
 		return true
@@ -71,8 +71,8 @@ func CancelCollectCartoon(userId, cartoonId int) bool {
 }
 
 func DeleteUserCollection(UserId int, cartoonIdSlice []int) bool {
-	db,_ := DB.OpenCartoon()
-	db.Table("user_collections").Where("user_id = ?",UserId).Where("cartoon_id in (?)",cartoonIdSlice).Update("deleted_at",time.Now().Format("2006-01-02 15:04:05"))
+	db, _ := DB.OpenCartoon()
+	db.Table("user_collections").Where("user_id = ?", UserId).Where("cartoon_id in (?)", cartoonIdSlice).Update("deleted_at", time.Now().Format("2006-01-02 15:04:05"))
 	return true
 }
 
@@ -88,16 +88,16 @@ func generalUserCollectionQuery(searchRequest BookCaseSearchRequest) *gorm.DB {
 		Where("c.deleted_at IS NULL").
 		Where("a.deleted_at IS NULL")
 	if searchRequest.IsAndroid && searchRequest.IsVerifying {
-		query  = query.Where("c.cartoon_type = ?",CartoonTypeExternal)
-	}else {
-		query  = query.Where("c.cartoon_type != ?",CartoonTypeExternal)
+		query = query.Where("c.cartoon_type = ?", CartoonTypeExternal)
+	} else {
+		query = query.Where("c.cartoon_type != ?", CartoonTypeExternal)
 	}
 	if !searchRequest.ShowRated {
-		query = query.Where("c.is_rated = ?",0)
+		query = query.Where("c.is_rated = ?", 0)
 	}
 	if searchRequest.SortType == 3 {
 		query = query.Order("a.updated_at DESC")
-	}else if searchRequest.SortType == 2 {
+	} else if searchRequest.SortType == 2 {
 		query = query.Order("c.updated_at DESC")
 	} else {
 		query = query.Order("a.created_at ASC")
