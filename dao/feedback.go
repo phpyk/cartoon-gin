@@ -30,7 +30,7 @@ func (f *UserFeedback) Save() {
 	}
 }
 
-//TODO 展示顺序有bug
+//TODO 展示顺序有bug,created_at 格式需优化
 func GetFeedbacks(userId, page, perPage int) []UserFeedback {
 	db, _ := DB.OpenCartoon()
 	var list []UserFeedback
