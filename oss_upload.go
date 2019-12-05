@@ -52,7 +52,7 @@ func main() {
 	objectAcl := oss.ObjectACL(oss.ACLPublicRead)
 
 	//imgList := dao.FindCartoonsHoverImageForUpload(*limit,lastMaxId)
-	imgList := dao.FindImagesByCartoonId(4180)
+	imgList := dao.FindImagesForUpload(1000,lastMaxId)
 	fmt.Printf("count:%d \n",len(imgList))
 
 	maxId := 0
