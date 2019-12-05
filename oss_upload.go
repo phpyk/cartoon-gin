@@ -8,16 +8,14 @@ import (
 	"strconv"
 	"time"
 
+	"cartoon-gin/configs"
 	"cartoon-gin/dao"
 	"cartoon-gin/myaws"
 	"cartoon-gin/utils"
 	"github.com/aliyun/aliyun-oss-go-sdk/oss"
 )
 
-var OssBucketName string = "pica-images"
-var OssEndPoint string = "oss-cn-shenzhen.aliyuncs.com"
-var OssAccessKeyId string = "LTAI4FeGR11hnFiqbvEqLHC4"
-var OsaAccessSecret string = "d7lQbqDR8dNeNOmusc93pNcyknq8UD"
+
 
 var maxIdFile = "../../max_id_to_oss.log"
 
@@ -37,13 +35,13 @@ func main() {
 	timeBegin := time.Now()
 
 	//1. 创建OSSClient实例。
-	client, err := oss.New(OssEndPoint, OssAccessKeyId, OsaAccessSecret)
+	client, err := oss.New(configs.OssEndPoint, configs.OssAccessKeyId, configs.OsaAccessSecret)
 	if err != nil {
 		fmt.Println("Error:", err)
 		os.Exit(-1)
 	}
 	//1. 获取存储空间。
-	bucket, err := client.Bucket(OssBucketName)
+	bucket, err := client.Bucket(configs.OssBucketName)
 	if err != nil {
 		fmt.Println("Error:", err)
 		os.Exit(-1)
