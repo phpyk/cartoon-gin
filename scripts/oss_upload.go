@@ -1,4 +1,4 @@
-package main
+package scripts
 
 import (
 	"flag"
@@ -24,13 +24,12 @@ func main() {
 	begin := flag.Int("begin",0,"begin")
 	flag.Parse()
 	var lastMaxId int
-	fmt.Println("begin:",*begin)
-	if *begin >= 0 {
+	if *begin > 0 {
 		lastMaxId = *begin
 	}else {
 		lastMaxId = getMaxIdToOss()
 	}
-	fmt.Println("max_id:",lastMaxId)
+	fmt.Println("begin:",lastMaxId)
 
 	timeBegin := time.Now()
 
@@ -69,7 +68,7 @@ func main() {
 		}
 
 		escaped := time.Since(t1)
-		fmt.Printf("Successfully uploaded %q to %q -- escaped: %v\n", filename, myaws.S3_BUCKET,escaped)
+		fmt.Printf("Successfully uploaded %q id: %v -- escaped: %v\n", filename, row.ID,escaped)
 		if row.ID > maxId {
 			maxId = row.ID
 			saveMaxIdToOss(maxId)

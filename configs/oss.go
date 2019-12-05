@@ -1,8 +1,8 @@
 package configs
 
 const (
- OssBucketName  = ""
- OssEndPoint  = ""
- OssAccessKeyId  = ""
- OsaAccessSecret  = ""
+	OssBucketName  = ""
+	OssEndPoint  = ""
+	OssAccessKeyId  = ""
+	OsaAccessSecret  = ""
 )

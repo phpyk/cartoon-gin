@@ -7,7 +7,7 @@ import (
 	"cartoon-gin/configs"
 )
 
-func main2() {
+func main() {
 	//禁用控制台颜色，写入日志时开启此选项
 	//gin.DisableConsoleColor()
 	// 写入日志的文件
