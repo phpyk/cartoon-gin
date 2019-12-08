@@ -6,6 +6,7 @@ import (
 	"io/ioutil"
 	"os"
 	"strconv"
+	"strings"
 	"time"
 
 	"cartoon-gin/configs"
@@ -50,14 +51,15 @@ func main() {
 	// 指定访问权限为公共读。
 	objectAcl := oss.ObjectACL(oss.ACLPublicRead)
 
-	//imgList := dao.FindCartoonsHoverImageForUpload(*limit,lastMaxId)
-	imgList := dao.FindImagesForUpload(1000,lastMaxId)
+	imgList := dao.FindCartoonsHoverImageForUpload(1000,lastMaxId)
+	//imgList := dao.FindImagesForUpload(1000,lastMaxId)
+	//imgList := dao.FindChaptersForUpload(1000,lastMaxId)
 	fmt.Printf("count:%d \n",len(imgList))
 
 	maxId := 0
 	for _, row := range imgList {
 		t1 := time.Now()
-		src := row.ImageAddr
+		src := row.HoverImage
 		filename, filebody := myaws.GetFileBodyAndName(src)
 
 		// 上传字符串。
@@ -82,7 +84,9 @@ func main() {
 func getMaxIdToOss() int {
 	c,err := ioutil.ReadFile(maxIdFile)
 	utils.CheckError(err)
-	i,err := strconv.Atoi(string(c))
+	strc := string(c)
+	strc = strings.ReplaceAll(strc,"\n","")
+	i,err := strconv.Atoi(strc)
 	utils.CheckError(err)
 	return i
 }
