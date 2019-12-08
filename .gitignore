@@ -1,4 +1,3 @@
 myaws/configs.go
-configs/app.go
-configs/pay.go
+configs/*.go
 .DS_Store
