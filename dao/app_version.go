@@ -32,3 +32,10 @@ func GetAppVersionRow(version, deviceType, channel string) (row AppVersion) {
 	query.First(&row)
 	return row
 }
+
+func GetNewestAppVersionRow(deviceType, channel string) (row AppVersion) {
+	db, err := DB.OpenCartoon()
+	utils.CheckError(err)
+	db.Table("app_versions").Where("device_type = ?", deviceType).Where("is_verifying = ?",0).Order("version DESC").First(&row)
+	return row
+}

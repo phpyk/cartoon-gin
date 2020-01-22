@@ -7,6 +7,21 @@ import (
 	"github.com/gin-gonic/gin"
 )
 
+func ConfigApiUrlAction(c *gin.Context) {
+	cg := utils.Gin{C: c,}
+
+	pushDuration := []int{2, 5, 15, 30,}
+	ip1 := make(map[string]string)
+	ip1["ip"] = "picaacgi.com"
+	ip1["port"] = "80"
+	ipList := []map[string]string{ip1,}
+	outData := make(map[string]interface{})
+	outData["data"] = ipList
+	outData["duration"] = pushDuration
+	cg.Success(outData)
+	return
+}
+
 func ConfigReportAction(c *gin.Context) {
 	var reasonTypes = [5]int{
 		dao.ReportReasonTypeQueshi,

@@ -82,5 +82,15 @@ func initRouter() *gin.Engine {
 		feedback.POST("save",FeedbackStoreAction)
 		feedback.GET("list",FeedbackListAction)
 	}
+	//检查版本升级
+	router.GET("/api/version/check",CheckAppUpdateAction)
+	//获取最新接口
+	router.GET("/api/creative",ConfigApiUrlAction)
+	//创建订单、查询订单
+	order := router.Group("/api/order/").Use(auth.ValidateJWTToken())
+	{
+		order.POST("create", OrderCreateAction)
+		order.GET("query", OrderQueryAction)
+	}
 	return router
 }

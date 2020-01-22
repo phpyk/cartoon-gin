@@ -30,6 +30,10 @@ const (
 	OrderStatusPaid  = 1
 )
 
+func CreateOrder(user User, orderType, packageId int) (order Order, err error) {
+
+}
+
 func HasBought(userId, orderType, configId int) bool {
 	db, _ := DB.OpenCartoon()
 	var count int
