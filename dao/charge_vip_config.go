@@ -21,3 +21,9 @@ func GetChargeVipConfigs(packageType string) []ChargeVipConfig {
 	db.Table("charge_vip_configs").Where("package_type = ?", packageType).Scan(&rows)
 	return rows
 }
+
+func GetChargeVipConfigRow(id int) (row ChargeVipConfig) {
+	db, _ := DB.OpenCartoon()
+	db.Table("charge_vip_configs").Where("id = ?", id).First(&row)
+	return row
+}

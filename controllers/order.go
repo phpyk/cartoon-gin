@@ -21,7 +21,10 @@ func OrderCreateAction(c *gin.Context) {
 	}
 	user := CurrentUser(c)
 	var order dao.Order
-	dao.crea
+	err = dao.CreateOrder(&order,user.ID ,orderType,packageId)
+	utils.CheckError(err)
 
-
+	outData := make(map[string]string)
+	outData["order_sn"] = order.OrderSn
+	cg.Success(outData)
 }

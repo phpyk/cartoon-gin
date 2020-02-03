@@ -21,3 +21,9 @@ func GetChargeCoinConfigs(packageType string) []ChargeCoinConfig {
 	db.Table("charge_coin_configs").Where("package_type = ?", packageType).Scan(&rows)
 	return rows
 }
+
+func GetChargeCoinConfigRow(id int) (row ChargeCoinConfig) {
+	db, _ := DB.OpenCartoon()
+	db.Table("charge_coin_configs").Where("id = ?", id).First(&row)
+	return row
+}
