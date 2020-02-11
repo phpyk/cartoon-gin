@@ -90,7 +90,7 @@ func initRouter() *gin.Engine {
 	order := router.Group("/api/order/").Use(auth.ValidateJWTToken())
 	{
 		order.POST("create", OrderCreateAction)
-		//order.GET("query", OrderQueryAction)
+		order.GET("query", OrderQueryAction)
 	}
 	return router
 }

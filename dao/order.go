@@ -1,16 +1,19 @@
 package dao
 
 import (
+	"errors"
 	"fmt"
 	"math/rand"
 	"strconv"
 	"time"
-	"errors"
+
 	"cartoon-gin/DB"
 )
 
 type Order struct {
-	MyGormModel
+	ID        int               `gorm:"primary_key" json:"id"`
+	CreatedAt time.Time         `json:"-" format:"2006-01-01 15:04:05"`
+	UpdatedAt time.Time         `json:"-" format:"2006-01-01 15:04:05"`
 	OrderSn         string  `json:"order_sn"`
 	UserId          int     `json:"user_id"`
 	OrderType       int     `json:"order_type"`
@@ -36,6 +39,19 @@ const (
 	OrderStatusUnpay = 0
 	OrderStatusPaid  = 1
 )
+
+func QueryOrder(args map[string]interface{}) (order Order) {
+	db, _ := DB.OpenCartoon()
+	query := db.Table("orders")
+	if userId ,ok := args["user_id"];ok {
+		query = query.Where("user_id = ?",userId)
+	}
+	if orderSn,ok := args["order_sn"];ok {
+		query = query.Where("order_sn = ?",orderSn)
+	}
+	query.First(&order)
+	return order
+}
 
 func CreateOrder(order *Order, userId, orderType, packageId int) error {
 	order.OrderSn = generateOrderSn(userId,orderType)

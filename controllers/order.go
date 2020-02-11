@@ -28,3 +28,33 @@ func OrderCreateAction(c *gin.Context) {
 	outData["order_sn"] = order.OrderSn
 	cg.Success(outData)
 }
+
+func OrderQueryAction(c *gin.Context) {
+	cg := utils.Gin{C: c,}
+	orderSn := c.Request.FormValue("order_sn")
+	if orderSn == "" {
+		cg.Failed("order_sn required")
+		return
+	}
+	user := CurrentUser(c)
+
+	condition := make(map[string]interface{})
+	condition["order_sn"] = orderSn
+	condition["user_id"] = user.ID
+	order := dao.QueryOrder(condition)
+	if order.ID == 0 {
+		cg.Failed("order not exists")
+		return
+	}
+
+	userInfo := make(map[string]interface{})
+	userInfo["user_type"] = user.UserType
+	userInfo["valid_coin"] = user.ValidCoin
+	userInfo["is_vip"] = user.IsVip
+	userInfo["vip_expire_time"] = user.VipExpireTime
+
+	outData := make(map[string]interface{})
+	outData["order_info"] = order
+	outData["user_info"] = userInfo
+	cg.Success(outData)
+}
